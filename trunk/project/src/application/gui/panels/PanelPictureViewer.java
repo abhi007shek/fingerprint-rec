@@ -1,10 +1,10 @@
 /*-----------------------------------------------------------------------------+
 
-			Filename			: MainFrame.java
+			Filename			: PanelPictureViewer.java
 			Creation date		: 16 déc. 07
 		
 			Project				: fingerprint-recog
-			Package				: application.gui
+			Package				: application.gui.panels
 
 			Developed by		: Thomas DEVAUX & Estelle SENAY
 			                      (2007) Concordia University
@@ -23,23 +23,23 @@
 
 +-----------------------------------------------------------------------------*/
 
-package application.gui;
+package application.gui.panels;
 
-import javax.swing.JFrame;
+import java.awt.Color;
 
-public class MainFrame extends JFrame
+import javax.swing.JPanel;
+
+public class PanelPictureViewer extends JPanel
 {
 	//---------------------------------------------------------- CONSTANTS --//
 
 	//---------------------------------------------------------- VARIABLES --//	
 
 	//------------------------------------------------------- CONSTRUCTORS --//
-	public MainFrame()
+	public PanelPictureViewer ()
 	{
-		// Initialize frame
-		setSize(800, 400);
-		setTitle("Fingerprint patern extractor");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		// Initialize values
+		setBackground(new Color (0, 0, 0));
 	}
 
 	//------------------------------------------------------------ METHODS --//	

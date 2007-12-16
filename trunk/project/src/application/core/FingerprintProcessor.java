@@ -1,10 +1,10 @@
 /*-----------------------------------------------------------------------------+
 
-			Filename			: MainFrame.java
+			Filename			: FingerprintProcessor.java
 			Creation date		: 16 déc. 07
 		
 			Project				: fingerprint-recog
-			Package				: application.gui
+			Package				: application.core
 
 			Developed by		: Thomas DEVAUX & Estelle SENAY
 			                      (2007) Concordia University
@@ -23,26 +23,25 @@
 
 +-----------------------------------------------------------------------------*/
 
-package application.gui;
+package application.core;
 
-import javax.swing.JFrame;
-
-public class MainFrame extends JFrame
+public class FingerprintProcessor 
 {
 	//---------------------------------------------------------- CONSTANTS --//
 
 	//---------------------------------------------------------- VARIABLES --//	
+	
+	//------------------------------------------------------- CONSTRUCTORS --//	
 
-	//------------------------------------------------------- CONSTRUCTORS --//
-	public MainFrame()
+	//------------------------------------------------------------ METHODS --//
+	
+	/**
+	 * Binarize a picture
+	 */
+	public BinaryMatrix binarizePicture (String filename)
 	{
-		// Initialize frame
-		setSize(800, 400);
-		setTitle("Fingerprint patern extractor");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		return new BinaryMatrix(filename);
 	}
-
-	//------------------------------------------------------------ METHODS --//	
 
 	//---------------------------------------------------- PRIVATE METHODS --//
 }

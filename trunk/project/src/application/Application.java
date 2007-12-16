@@ -4,6 +4,9 @@ import javax.swing.UIManager;
 
 import application.gui.MainFrame;
 
+
+
+
 /*-----------------------------------------------------------------------------+
 
 			Filename			: Application.java
@@ -44,16 +47,7 @@ public class Application
 	public static void main(String[] args) 
 	{
 		// Set style
-	    try 
-	    {
-	    	//UIManager.setLookAndFeel(new SyntheticaStandardLookAndFeel());
-	    	
-	    	UIManager.setLookAndFeel("de.javasoft.plaf.synthetica.SyntheticaBlackStarLookAndFeel");
-	    } 
-	    catch (Exception e) 
-	    {
-	    	e.printStackTrace();
-	    }
+		setStyle();
 	    
 		
 		// Create the main frame
@@ -65,5 +59,19 @@ public class Application
 		// Show the window
 		mainWindow.setVisible(true);
 	}
+	
 	//---------------------------------------------------- PRIVATE METHODS --//
+	private static void setStyle()
+	{	
+	    try 
+	    {
+	    	//UIManager.setLookAndFeel(new SyntheticaStandardLookAndFeel());
+	    	
+	    	UIManager.setLookAndFeel("de.javasoft.plaf.synthetica.SyntheticaBlackStarLookAndFeel");
+	    } 
+	    catch (Exception e) 
+	    {
+	    	e.printStackTrace();
+	    }
+	}
 }
