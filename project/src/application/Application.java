@@ -1,10 +1,12 @@
+package application;
+
 /*-----------------------------------------------------------------------------+
 
-			Filename			: MainFrame.java
+			Filename			: Application.java
 			Creation date		: 16 déc. 07
 		
 			Project				: fingerprint-recog
-			Package				: gui
+			Package				: 
 
 			Developed by		: Thomas DEVAUX & Estelle SENAY
 			                      (2007) Concordia University
@@ -23,24 +25,25 @@
 
 +-----------------------------------------------------------------------------*/
 
-package gui;
-
-import javax.swing.JFrame;
-
-public class MainFrame extends JFrame
+public class Application 
 {
+
+	
 	//---------------------------------------------------------- CONSTANTS --//
 
 	//---------------------------------------------------------- VARIABLES --//	
-
-	//------------------------------------------------------- CONSTRUCTORS --//
-	public MainFrame()
-	{
-		// Initialize size
-		this.setSize(800, 400);
-	}
+	private static MainFrame mainWindow;
+	
+	//------------------------------------------------------- CONSTRUCTORS --//	
 
 	//------------------------------------------------------------ METHODS --//	
-
+	public static void main(String[] args) 
+	{
+		// Create the main frame
+		mainWindow = new MainFrame();
+		mainWindow.setTitle("Fingerprint patern extractor");
+		
+		mainWindow.setVisible(true);
+	}
 	//---------------------------------------------------- PRIVATE METHODS --//
 }
