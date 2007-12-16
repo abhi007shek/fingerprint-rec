@@ -1,5 +1,7 @@
 package application;
 
+import javax.swing.UIManager;
+
 import application.gui.MainFrame;
 
 
@@ -42,10 +44,23 @@ public class Application
 	//------------------------------------------------------------ METHODS --//	
 	public static void main(String[] args) 
 	{
+		// Set the style
+		try
+		{
+			UIManager.setLookAndFeel( "de.javasoft.plaf.synthetica.SyntheticaBlueMoonLookAndFeel"  );
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
 		// Create the main frame
 		mainWindow = new MainFrame();
-		mainWindow.setTitle("Fingerprint patern extractor");
 		
+		
+		
+		
+		// Show the window
 		mainWindow.setVisible(true);
 	}
 	//---------------------------------------------------- PRIVATE METHODS --//

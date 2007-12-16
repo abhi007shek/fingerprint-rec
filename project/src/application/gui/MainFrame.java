@@ -38,6 +38,12 @@ public class MainFrame extends JFrame
 	{
 		// Initialize size
 		this.setSize(800, 400);
+		
+		// Set title
+		setTitle("Fingerprint patern extractor");
+		
+		// Set style
+				
 	}
 
 	//------------------------------------------------------------ METHODS --//	
