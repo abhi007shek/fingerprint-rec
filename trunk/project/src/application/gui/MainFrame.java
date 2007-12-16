@@ -4,7 +4,7 @@
 			Creation date		: 16 déc. 07
 		
 			Project				: fingerprint-recog
-			Package				: gui
+			Package				: application.gui
 
 			Developed by		: Thomas DEVAUX & Estelle SENAY
 			                      (2007) Concordia University
@@ -23,7 +23,7 @@
 
 +-----------------------------------------------------------------------------*/
 
-package application;
+package application.gui;
 
 import javax.swing.JFrame;
 

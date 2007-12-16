@@ -1,12 +1,15 @@
 package application;
 
+import application.gui.MainFrame;
+
+
 /*-----------------------------------------------------------------------------+
 
 			Filename			: Application.java
 			Creation date		: 16 déc. 07
 		
 			Project				: fingerprint-recog
-			Package				: 
+			Package				: application
 
 			Developed by		: Thomas DEVAUX & Estelle SENAY
 			                      (2007) Concordia University
