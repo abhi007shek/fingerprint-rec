@@ -96,14 +96,14 @@ public class MainFrame extends JFrame
         listeners.add(listener);
     }
 	
-	public void setPanel1Result(BufferedImage image)
+	public void setOriginalImage(BufferedImage image)
 	{
-		pan1Original.drawBufferedImage(image);
+		pan1Original.setBufferedImage(image);
 	}
 	
-	public void setPanel2Result(BufferedImage image)
+	public void setBinaryPicture(BufferedImage image)
 	{
-		pan2BinaryPicture.drawBufferedImage(image);
+		pan2BinaryPicture.setBufferedImage(image);
 	}
 
 	//---------------------------------------------------- PRIVATE METHODS --//

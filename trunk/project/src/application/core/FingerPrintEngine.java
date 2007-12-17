@@ -24,8 +24,6 @@
 +-----------------------------------------------------------------------------*/
 package application.core;
 
-import javax.swing.UIManager;
-
 import application.gui.MainFrame;
 
 public class FingerPrintEngine implements MainFrameListener
@@ -41,49 +39,26 @@ public class FingerPrintEngine implements MainFrameListener
 
 	//------------------------------------------------------------ METHODS --//	
 	
-	public FingerPrintEngine() 
+	public FingerPrintEngine(MainFrame mainWindow) 
 	{
-		// Set style
-		setStyle();
-	    
-		// Create the main frame
-		mainWindow = new MainFrame();
-		
-		// Show the window
-		mainWindow.setVisible(true);
-		
-		// Create objects
-		mainWindow.addMainFrameListener(this);
+		this.mainWindow = mainWindow;
 	}
 	
 	
 	//---------------------------------------------------- PRIVATE METHODS --//
-	private static void setStyle()
-	{	
-	    try 
-	    {	    	
-	    	UIManager.setLookAndFeel("de.javasoft.plaf.synthetica.SyntheticaBlackStarLookAndFeel");
-	    } 
-	    catch (Exception e) 
-	    {
-	    	e.printStackTrace();
-	    }
-	}
+
 	
 	@Override
 	public void startExtraction() 
-	{
-		// TODO
-		System.out.println("Extracting " + filename);
-		
+	{		
 		// Create binaryPicture
 		binaryPicture = new BinaryMatrix(filename);
 		
 		// Print original image
-		mainWindow.setPanel1Result(binaryPicture.getOriginalImage());
+		mainWindow.setOriginalImage(binaryPicture.getOriginalImage());
 		
 		// Print binary result
-		mainWindow.setPanel2Result(binaryPicture.toBufferedImage());
+		mainWindow.setBinaryPicture(binaryPicture.toBufferedImage());
 	}
 	
 	@Override

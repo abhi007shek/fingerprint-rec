@@ -25,19 +25,47 @@
 
 package application.core;
 
+import javax.swing.UIManager;
+
+import application.gui.MainFrame;
+
 public class Application 
 {
-	public static void main(String[] args)
-	{
-		new FingerPrintEngine();
-	}
 	//---------------------------------------------------------- CONSTANTS --//
 
 	//---------------------------------------------------------- VARIABLES --//	
-
+	private static MainFrame mainWindow;
+	private static FingerPrintEngine fingerPrintEngine;
+	
 	//------------------------------------------------------- CONSTRUCTORS --//	
 
 	//------------------------------------------------------------ METHODS --//	
-
+	public static void main(String[] args)
+	{
+		// Set style
+		setStyle();
+	    
+		// Create the main frame
+		mainWindow = new MainFrame();
+		
+		// Create objects
+		fingerPrintEngine = new FingerPrintEngine(mainWindow);
+		mainWindow.addMainFrameListener(fingerPrintEngine);	
+		
+		// Show the window
+		mainWindow.setVisible(true);
+	}
+	
 	//---------------------------------------------------- PRIVATE METHODS --//
+	private static void setStyle()
+	{	
+	    try 
+	    {	    	
+	    	UIManager.setLookAndFeel("de.javasoft.plaf.synthetica.SyntheticaBlackStarLookAndFeel");
+	    } 
+	    catch (Exception e) 
+	    {
+	    	e.printStackTrace();
+	    }
+	}
 }
