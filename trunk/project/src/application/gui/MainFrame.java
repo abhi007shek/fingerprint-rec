@@ -92,7 +92,7 @@ public class MainFrame extends JFrame
 		// Picture panels
 		pan1Original = new PanelPictureViewer("Original");
 		pan2BinaryPicture = new PanelPictureViewer("Binary");
-		pan3NoiseRemoval = new PanelPictureViewer("Noise removal");
+		pan3NoiseRemoval = new PanelPictureViewer("Smoothed");
 		pan4Skeleton = new PanelPictureViewer("Skeleton");
 		pan5CoreDetection = new PanelPictureViewer("Core");
 		pan6Minutiae = new PanelPictureViewer("Minutiae");
