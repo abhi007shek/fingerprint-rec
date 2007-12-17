@@ -30,12 +30,15 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import application.gui.panels.PanelPictureViewer;
+import application.gui.picturechooser.PictureChooser;
 
 public class MainFrame extends JFrame
 {
@@ -58,6 +61,9 @@ public class MainFrame extends JFrame
 	// Buttons
 	private JButton btBrowse;
 	private JButton btExtract;
+	
+	// Picture chooser
+	private PictureChooser pictureChooser;
 
 	//------------------------------------------------------- CONSTRUCTORS --//
 	public MainFrame()
@@ -70,11 +76,29 @@ public class MainFrame extends JFrame
 	
 		// Set layouts
 		setLayouts();
+		
+		// Define button behaviour
+		initButtons();
 	}
 
 	//------------------------------------------------------------ METHODS --//	
 
 	//---------------------------------------------------- PRIVATE METHODS --//
+	private void initButtons()
+	{
+		// Initial state
+		btExtract.setEnabled(false);
+		
+		// Set actions
+		btExtract.addActionListener(	new ActionListener() {
+			        					public void actionPerformed(ActionEvent e) 
+			        					{onBtExtractPressed();}});
+		
+		btBrowse.addActionListener(	new ActionListener() {
+									public void actionPerformed(ActionEvent e) 
+									{onBtBrowsePressed();}});
+	}
+	
 	private void initFrame()
 	{
 		setSize(1024, 256);
@@ -100,6 +124,9 @@ public class MainFrame extends JFrame
 		// Buttons
 		btBrowse = new JButton("...");
 		btExtract = new JButton("Extract !");
+		
+		// Picture chooser
+		pictureChooser = new PictureChooser();
 	}
 	
 	private void setLayouts()
@@ -252,4 +279,16 @@ public class MainFrame extends JFrame
 	    );
 		gbLayoutPicturesPanel.setConstraints(pan6Minutiae, gbConstPanel6);
 	}
+	
+	private void onBtBrowsePressed()
+	{
+		pictureChooser.showOpenDialog(this);
+	}
+	
+	private void onBtExtractPressed()
+	{
+		
+	}
+	
+	//-------------------------------------------------------- PRIVATE TYPES --//
 }
