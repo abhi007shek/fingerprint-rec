@@ -32,11 +32,17 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import application.core.MainFrameListener;
 import application.gui.panels.PanelPictureViewer;
 import application.gui.picturechooser.PictureChooser;
 
@@ -64,7 +70,10 @@ public class MainFrame extends JFrame
 	
 	// Picture chooser
 	private PictureChooser pictureChooser;
-
+	
+	// Listeners
+	private Collection<MainFrameListener> listeners;
+	 
 	//------------------------------------------------------- CONSTRUCTORS --//
 	public MainFrame()
 	{
@@ -82,6 +91,20 @@ public class MainFrame extends JFrame
 	}
 
 	//------------------------------------------------------------ METHODS --//	
+	public void addMainFrameListener(MainFrameListener listener) 
+	{
+        listeners.add(listener);
+    }
+	
+	public void setPanel1Result(BufferedImage image)
+	{
+		pan1Original.drawBufferedImage(image);
+	}
+	
+	public void setPanel2Result(BufferedImage image)
+	{
+		pan2BinaryPicture.drawBufferedImage(image);
+	}
 
 	//---------------------------------------------------- PRIVATE METHODS --//
 	private void initButtons()
@@ -127,6 +150,9 @@ public class MainFrame extends JFrame
 		
 		// Picture chooser
 		pictureChooser = new PictureChooser();
+		
+		// Listeners
+		listeners = new ArrayList<MainFrameListener>();
 	}
 	
 	private void setLayouts()
@@ -282,12 +308,38 @@ public class MainFrame extends JFrame
 	
 	private void onBtBrowsePressed()
 	{
-		pictureChooser.showOpenDialog(this);
+		// Open the picture chooser dialog
+		int choice;
+		choice = pictureChooser.showOpenDialog(this);
+		
+		if(choice == JFileChooser.APPROVE_OPTION) 
+		{
+			File picFile = pictureChooser.getSelectedFile();
+			fireNewPictureFile(picFile.getAbsolutePath());
+		}
+		
+		btExtract.setEnabled(true);
 	}
 	
 	private void onBtExtractPressed()
 	{
-		
+		fireStartExtraction();
+	}
+	
+	private void fireNewPictureFile(String filename)
+	{
+		for(MainFrameListener listener : listeners) 
+		{
+			listener.newPictureFile(filename);
+        }
+	}
+	
+	private void fireStartExtraction()
+	{
+		for(MainFrameListener listener : listeners) 
+		{
+			listener.startExtraction();
+        }
 	}
 	
 	//-------------------------------------------------------- PRIVATE TYPES --//

@@ -35,54 +35,63 @@ import javax.imageio.ImageIO;
 
 public class BinaryMatrix
 {	//---------------------------------------------------------- CONSTANTS --//
-	private int BLACK_WHITE_BOUNDARY = 100;
 	
 	//---------------------------------------------------------- VARIABLES --//	
 	boolean map [][] = null;
 	int width;
 	int height;
 	
+	BufferedImage originalImage;
+	
 	//------------------------------------------------------- CONSTRUCTORS --//		
 	public BinaryMatrix (String filename)
 	{
 		// Open and create the buffered image
-		BufferedImage mapImage;
 		try 
 		{
-			mapImage = ImageIO.read(new File(filename));
+			originalImage = ImageIO.read(new File(filename));
+			
+			// Create the binary picture
+			width = originalImage.getWidth();
+			height = originalImage.getHeight();
+			
+			
+			int [][] greymap = new int [width][height];
+			
+			// Generate greymap
+			int curColor;
+			
+			for (int i = 0 ; i < width ; ++i)
+			{
+				for (int j = 0 ; j < height ; ++j)
+				{
+					curColor = originalImage.getRGB(i,j);
+					int R = (curColor >>16 ) & 0xFF;
+					int G = (curColor >> 8 ) & 0xFF;
+					int B = (curColor      ) & 0xFF;
+					
+					int greyVal = (R + G + B) / 3;
+					greymap[i][j] = greyVal;
+				}
+			}
+			
+			// Get the grey mean
+			int greymean = getGreylevelMean(greymap, width, height);
+			
+			// Generate the boolean value
+			map = new boolean [width][height];
+			for (int i = 0 ; i < width ; ++i)
+			{
+				for (int j = 0 ; j < height ; ++j)
+				{
+					map[i][j] = !(greymap[i][j] > greymean); 
+				}
+			}
 		}
 		catch (IOException e) 
 		{
-			mapImage = null;
+			originalImage = null;
 			e.printStackTrace();
-		}
-		
-		// Create the binary picture
-		width = mapImage.getWidth();
-		height = mapImage.getHeight();
-		
-		// Iterate on each pixel
-		int curColor;
-		
-		for (int i = 0 ; i < width ; ++i)
-		{
-			for (int j = 0 ; j < height ; ++j)
-			{
-				curColor = mapImage.getRGB(i,j);
-				int R = (curColor >>16 ) & 0xFF;
-				int G = (curColor >> 8 ) & 0xFF;
-				int B = (curColor      ) & 0xFF;
-				
-				int greyVal = (R + G + B) / 3;
-				if (greyVal < BLACK_WHITE_BOUNDARY)
-				{
-					map[i][j] = false;
-				}
-				else
-				{
-					map[i][j] = true;
-				}
-			}
 		}
 	}
 
@@ -123,10 +132,29 @@ public class BinaryMatrix
 					bufferedImage.setRGB(i, j, Color.white.getRGB());
 				}
 			}
+			System.out.println("");
 		}
 		
 		return bufferedImage;
 	}
 	
+	public BufferedImage getOriginalImage() 
+	{
+		return originalImage;
+	}
+
 	//---------------------------------------------------- PRIVATE METHODS --//
+	private int getGreylevelMean( int [][] greymap, int w, int h)
+	{
+		int total = 0;
+		for (int i = 0 ; i < w ; ++i)
+		{
+			for (int j = 0 ; j < h ; ++j)
+			{
+				total += greymap[i][j]; 
+			}
+		}
+		
+		return total/(w*h);
+	}
 }

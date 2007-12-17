@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------+
 
-			Filename			: FingerprintProcessor.java
-			Creation date		: 16 déc. 07
+			Filename			: Application.java
+			Creation date		: 17 déc. 07
 		
 			Project				: fingerprint-recog
 			Package				: application.core
@@ -25,23 +25,19 @@
 
 package application.core;
 
-public class FingerprintProcessor 
+public class Application 
 {
+	public static void main(String[] args)
+	{
+		new FingerPrintEngine();
+	}
 	//---------------------------------------------------------- CONSTANTS --//
 
 	//---------------------------------------------------------- VARIABLES --//	
-	
+
 	//------------------------------------------------------- CONSTRUCTORS --//	
 
-	//------------------------------------------------------------ METHODS --//
-	
-	/**
-	 * Binarize a picture
-	 */
-	public BinaryMatrix binarizePicture (String filename)
-	{
-		return new BinaryMatrix(filename);
-	}
+	//------------------------------------------------------------ METHODS --//	
 
 	//---------------------------------------------------- PRIVATE METHODS --//
 }
