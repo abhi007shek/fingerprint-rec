@@ -9,9 +9,9 @@
 			Developed by		: Thomas DEVAUX & Estelle SENAY
 			                      (2007) Concordia University
 			                      
-			                      Adapted from JFileChooser with Image Preview
-			                      (from Michael Urban, 
-			                      http://www.javalobby.org/java/forums/t49462.html)
+			                      Adapted from R.J. Lorimer
+			                      ("Use an Accessory to Spice Up JFileChooser", 
+			                      http://www.javalobby.org/forums/thread.jspa?messageID=91844740)
 
 							-------------------------
 
@@ -29,16 +29,21 @@
 
 package application.gui.picturechooser;
 
-import java.awt.Color;
+import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class PicturePreviewPanel extends JPanel implements PropertyChangeListener
@@ -46,94 +51,55 @@ public class PicturePreviewPanel extends JPanel implements PropertyChangeListene
 	//---------------------------------------------------------- CONSTANTS --//
 
 	//---------------------------------------------------------- VARIABLES --//	
-    private int width, height;
-    private ImageIcon icon;
-    private Image image;
-    private static final int ACCSIZE = 155;
-    private Color bg;
-    
+	private JLabel label;
+	private int maxImgWidth;
+	
 	//------------------------------------------------------- CONSTRUCTORS --//	
 
 	//------------------------------------------------------------ METHODS --//	
 
 	//---------------------------------------------------- PRIVATE METHODS --//
 	
+
 	public PicturePreviewPanel() 
 	{
-		setPreferredSize(new Dimension(ACCSIZE, -1));
-		bg = getBackground();
+		setLayout(new BorderLayout(5,5));
+		setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+		add(new JLabel("Preview:"), BorderLayout.NORTH);
+		label = new JLabel();
+		label.setOpaque(false);
+		label.setPreferredSize(new Dimension(200, 200));
+		maxImgWidth = 195;
+		label.setBorder(BorderFactory.createEtchedBorder());
+		add(label, BorderLayout.CENTER);
+	}
+
+	public void propertyChange(PropertyChangeEvent evt) 
+	{
+		Icon icon = null;
+		if(JFileChooser.SELECTED_FILE_CHANGED_PROPERTY.equals(evt.getPropertyName())) 
+		{
+			File newFile = (File) evt.getNewValue();
+			if(newFile != null) 
+			{
+				try 
+				{
+					BufferedImage img = ImageIO.read(newFile);
+					float width = img.getWidth();
+					float height = img.getHeight();
+					float scale = height / width;
+					width = maxImgWidth;
+					height = (width * scale); // height should be scaled from new width							
+					icon = new ImageIcon(img.getScaledInstance(Math.max(1, (int)width), Math.max(1, (int)height), Image.SCALE_SMOOTH));
+				}
+				catch(IOException e) 
+				{
+					// couldn't read image.
+				}
+			}	
+			label.setIcon(icon);
+			this.repaint();	
+		}
 	}
 	
-	    
-	public void propertyChange(PropertyChangeEvent e) 
-	{
-	    String propertyName = e.getPropertyName();
-	    
-	    // Make sure we are responding to the right event.
-	    if (propertyName.equals(JFileChooser.SELECTED_FILE_CHANGED_PROPERTY)) 
-	    {
-	        File selection = (File)e.getNewValue();
-	        String name;
-	        
-	        if (selection == null)
-	            return;
-	        else
-	            name = selection.getAbsolutePath();
-	        
-	        icon = new ImageIcon(name);
-	        image = icon.getImage();
-	        scaleImage();
-	        repaint();
-	    }
-	}
-	    
-	private void scaleImage() 
-	{
-	    width = image.getWidth(this);
-	    height = image.getHeight(this);
-	    double ratio = 1.0;
-   
-
-	    // Determine how to scale the image
-
-	    if (width >= height) 
-	    {
-	        ratio = (double)(ACCSIZE-5) / width;
-	        width = ACCSIZE-5;
-	        height = (int)(height * ratio);
-	    }
-	    else 
-	    {
-	        if (getHeight() > 150) 
-	        {
-	            ratio = (double)(ACCSIZE-5) / height;
-	            height = ACCSIZE-5;
-	            width = (int)(width * ratio);
-	        }
-	        else 
-	        {
-	            ratio = (double)getHeight() / height;
-	            height = getHeight();
-	            width = (int)(width * ratio);
-	        }
-	    }
-            
-	    image = image.getScaledInstance(width, height, Image.SCALE_DEFAULT);
-	}
-
-	public void paintComponent(Graphics g)
-	{
-	    g.setColor(bg);
-	    
-		 
-		 // If we don't do this, we will end up with garbage from previous
-		 // images if they have larger sizes than the one we are currently
-		 // drawing. Also, it seems that the file list can paint outside
-		 // of its rectangle, and will cause odd behavior if we don't clear
-		 // or fill the rectangle for the accessory before drawing. This might
-		 // be a bug in JFileChooser.
-	    g.fillRect(0, 0, ACCSIZE, getHeight());
-	    g.drawImage(image, getWidth() / 2 - width / 2 + 5,
-	            getHeight() / 2 - height / 2, this);
-	}
 }
