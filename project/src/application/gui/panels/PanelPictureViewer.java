@@ -51,7 +51,7 @@ public class PanelPictureViewer extends JPanel
 		setBackground(new Color (0, 0, 0));
 		
 		// Create objects
-		titlePanel = new JTextField(pictureName);
+		titlePanel = new JTextField(pictureName,10);
 		picturePanel = new JPanel();
 		
 		titlePanel.setBackground(new Color(100,100,100));
@@ -59,7 +59,7 @@ public class PanelPictureViewer extends JPanel
 		titlePanel.setAlignmentY(JTextField.CENTER_ALIGNMENT);
 		titlePanel.setFont(new Font("Arial",0,15));
 		
-		picturePanel.setBackground(Color.green);
+		picturePanel.setBackground(new Color(100,100,100));
 		
 		// Set layouts
 		GridBagLayout gbLayout = new GridBagLayout();
