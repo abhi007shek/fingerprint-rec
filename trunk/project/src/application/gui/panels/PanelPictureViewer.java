@@ -31,6 +31,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -102,10 +103,13 @@ public class PanelPictureViewer extends JPanel
 		
 		titlePanel.setLayout(new GridLayout());
 		picturePanel.setLayout(new GridLayout());
-		
 	}
 
 	//------------------------------------------------------------ METHODS --//	
+	public void drawBufferedImage(BufferedImage buffer)
+	{
+		picturePanel.getGraphics().drawImage(buffer, 0, 0, picturePanel.getWidth(), picturePanel.getHeight(), this);
+	}
 
 	//---------------------------------------------------- PRIVATE METHODS --//
 }

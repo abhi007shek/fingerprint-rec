@@ -50,7 +50,7 @@ public class PictureChooser extends JFileChooser
 		addChoosableFileFilter(new SimpleFilter("GIF (*.gif)",".gif"));
 		addChoosableFileFilter(new SimpleFilter("JPEG (*.jpg)",".jpg"));
 		addChoosableFileFilter(new SimpleFilter("PNG (*.png)",".png"));
-		addChoosableFileFilter(new SimpleFilter("TIFF (*.tif)",".tif"));
+		//addChoosableFileFilter(new SimpleFilter("TIFF (*.tif)",".tif"));
 		
 		// Add picture previewer
 		PicturePreviewPanel preview = new PicturePreviewPanel();

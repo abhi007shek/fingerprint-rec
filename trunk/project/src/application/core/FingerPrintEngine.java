@@ -1,15 +1,6 @@
-package application;
-
-import javax.swing.UIManager;
-
-import application.gui.MainFrame;
-
-
-
-
 /*-----------------------------------------------------------------------------+
 
-			Filename			: Application.java
+			Filename			: FingerPrintEngine.java
 			Creation date		: 16 déc. 07
 		
 			Project				: fingerprint-recog
@@ -31,20 +22,26 @@ import application.gui.MainFrame;
     more details.
 
 +-----------------------------------------------------------------------------*/
+package application.core;
 
-public class Application 
+import javax.swing.UIManager;
+
+import application.gui.MainFrame;
+
+public class FingerPrintEngine implements MainFrameListener
 {
-
-	
 	//---------------------------------------------------------- CONSTANTS --//
 
 	//---------------------------------------------------------- VARIABLES --//	
-	private static MainFrame mainWindow;
+	private MainFrame mainWindow;
+	private String filename;
+	private BinaryMatrix binaryPicture;
 	
 	//------------------------------------------------------- CONSTRUCTORS --//	
 
 	//------------------------------------------------------------ METHODS --//	
-	public static void main(String[] args) 
+	
+	public FingerPrintEngine() 
 	{
 		// Set style
 		setStyle();
@@ -54,7 +51,11 @@ public class Application
 		
 		// Show the window
 		mainWindow.setVisible(true);
+		
+		// Create objects
+		mainWindow.addMainFrameListener(this);
 	}
+	
 	
 	//---------------------------------------------------- PRIVATE METHODS --//
 	private static void setStyle()
@@ -68,4 +69,27 @@ public class Application
 	    	e.printStackTrace();
 	    }
 	}
+	
+	@Override
+	public void startExtraction() 
+	{
+		// TODO
+		System.out.println("Extracting " + filename);
+		
+		// Create binaryPicture
+		binaryPicture = new BinaryMatrix(filename);
+		
+		// Print original image
+		mainWindow.setPanel1Result(binaryPicture.getOriginalImage());
+		
+		// Print binary result
+		mainWindow.setPanel2Result(binaryPicture.toBufferedImage());
+	}
+	
+	@Override
+	public void newPictureFile(String filename) 
+	{
+		this.filename = filename;
+	}
+
 }
