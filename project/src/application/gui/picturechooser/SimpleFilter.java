@@ -1,19 +1,10 @@
-package application;
-
-import javax.swing.UIManager;
-
-import application.gui.MainFrame;
-
-
-
-
 /*-----------------------------------------------------------------------------+
 
-			Filename			: Application.java
-			Creation date		: 16 déc. 07
+			Filename			: PictureFilter.java
+			Creation date		: 17 déc. 07
 		
 			Project				: fingerprint-recog
-			Package				: application
+			Package				: application.gui.picturechooser
 
 			Developed by		: Thomas DEVAUX & Estelle SENAY
 			                      (2007) Concordia University
@@ -32,40 +23,41 @@ import application.gui.MainFrame;
 
 +-----------------------------------------------------------------------------*/
 
-public class Application 
-{
+package application.gui.picturechooser;
 
-	
+import java.io.File;
+
+import javax.swing.filechooser.FileFilter;
+
+public class SimpleFilter extends FileFilter
+{
 	//---------------------------------------------------------- CONSTANTS --//
 
 	//---------------------------------------------------------- VARIABLES --//	
-	private static MainFrame mainWindow;
+	private String description;
+	private String extension;
 	
 	//------------------------------------------------------- CONSTRUCTORS --//	
-
-	//------------------------------------------------------------ METHODS --//	
-	public static void main(String[] args) 
+	public SimpleFilter(String description, String extension)
 	{
-		// Set style
-		setStyle();
-	    
-		// Create the main frame
-		mainWindow = new MainFrame();
-		
-		// Show the window
-		mainWindow.setVisible(true);
+		this.description = description;
+		this.extension = extension;
+	}
+	//------------------------------------------------------------ METHODS --//	
+	public boolean accept(File file)
+	{
+		if(file.isDirectory()) 
+		{ 
+			return true; 
+		} 
+		String myFile = file.getName().toLowerCase(); 
+		return myFile.endsWith(extension);
+	}
+	
+	public String getDescription()
+	{
+		return description;
 	}
 	
 	//---------------------------------------------------- PRIVATE METHODS --//
-	private static void setStyle()
-	{	
-	    try 
-	    {	    	
-	    	UIManager.setLookAndFeel("de.javasoft.plaf.synthetica.SyntheticaBlackStarLookAndFeel");
-	    } 
-	    catch (Exception e) 
-	    {
-	    	e.printStackTrace();
-	    }
-	}
 }
