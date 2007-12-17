@@ -44,6 +44,8 @@ public class PanelPictureViewer extends JPanel
 	//---------------------------------------------------------- VARIABLES --//
 	JTextField titlePanel;
 	JPanel picturePanel;
+	
+	BufferedImage buffer;
 
 	//------------------------------------------------------- CONSTRUCTORS --//
 	public PanelPictureViewer ( String pictureName)
@@ -106,8 +108,16 @@ public class PanelPictureViewer extends JPanel
 	}
 
 	//------------------------------------------------------------ METHODS --//	
-	public void drawBufferedImage(BufferedImage buffer)
+	public void setBufferedImage(BufferedImage buffer)
 	{
+		this.buffer = buffer; 
+	}
+	
+	@Override
+	public void repaint() 
+	{
+		super.repaint();
+		
 		picturePanel.getGraphics().drawImage(buffer, 0, 0, picturePanel.getWidth(), picturePanel.getHeight(), this);
 	}
 
