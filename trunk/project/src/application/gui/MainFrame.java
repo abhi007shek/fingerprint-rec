@@ -25,12 +25,15 @@
 
 package application.gui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import application.gui.panels.PanelPictureViewer;
 
@@ -40,6 +43,9 @@ public class MainFrame extends JFrame
 	private int SPACE = 3;
 
 	//---------------------------------------------------------- VARIABLES --//
+	
+	// Main panel
+	private JPanel bkgPanel;
 	
 	// Picture panels
 	private PanelPictureViewer pan1Original;
@@ -71,13 +77,18 @@ public class MainFrame extends JFrame
 	//---------------------------------------------------- PRIVATE METHODS --//
 	private void initFrame()
 	{
-		setSize(1000, 200);
-		setTitle("Fingerprint patern extractor");
+		setSize(1024, 256);
+		setTitle("Fingerprint pattern extractor");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		setBackground(Color.black);
 	}
 	
 	private void createObjects()
 	{
+		// Main panel
+		bkgPanel = new JPanel();
+		
 		// Picture panels
 		pan1Original = new PanelPictureViewer("Original");
 		pan2BinaryPicture = new PanelPictureViewer("Binary");
@@ -94,19 +105,24 @@ public class MainFrame extends JFrame
 	private void setLayouts()
 	{
 		// Add panels to the main panel		
-		add(pan1Original);
-		add(pan2BinaryPicture);
-		add(pan3NoiseRemoval);
-		add(pan4Skeleton);
-		add(pan5CoreDetection);
-		add(pan6Minutiae);
+		bkgPanel.add(pan1Original);
+		bkgPanel.add(pan2BinaryPicture);
+		bkgPanel.add(pan3NoiseRemoval);
+		bkgPanel.add(pan4Skeleton);
+		bkgPanel.add(pan5CoreDetection);
+		bkgPanel.add(pan6Minutiae);
 		
 		// Add buttons
-		add(btBrowse);
-		add(btExtract);
+		bkgPanel.add(btBrowse);
+		bkgPanel.add(btExtract);
+		
+		bkgPanel.setLayout(new BorderLayout());
+		bkgPanel.setBackground(Color.black);
+		
+		add (bkgPanel);
 		
 		GridBagLayout gbLayoutPicturesPanel = new GridBagLayout();
-		setLayout(gbLayoutPicturesPanel);
+		bkgPanel.setLayout(gbLayoutPicturesPanel);
 		
 		// Button browse constraints
 		GridBagConstraints gbConstBtBrowse = new GridBagConstraints (	
@@ -114,11 +130,11 @@ public class MainFrame extends JFrame
 	            0,							// Line number
 	            1,							// Nb occupied lines
 	            1,							// Nb occupied columns
-	            10,						    // Relative horizontal space
+	            4,						    // Relative horizontal space
 	            50,							// Relative vertical space
 	            GridBagConstraints.CENTER,	// Where to place component when resizing
 	            GridBagConstraints.BOTH,	// How to rescale component
-	            new Insets(0, SPACE, SPACE, SPACE), // Spaces (top, left, bottom, right)
+	            new Insets(SPACE, SPACE, SPACE, SPACE), // Spaces (top, left, bottom, right)
 	            0,							// In space X
 	            0							// In space Y
 	    );
@@ -130,11 +146,11 @@ public class MainFrame extends JFrame
 	            1,							// Line number
 	            1,							// Nb occupied lines
 	            1,							// Nb occupied columns
-	            10,						    // Relative horizontal space
+	            4,						    // Relative horizontal space
 	            50,							// Relative vertical space
 	            GridBagConstraints.CENTER,	// Where to place component when resizing
 	            GridBagConstraints.BOTH,	// How to rescale component
-	            new Insets(0, SPACE, SPACE, SPACE), // Spaces (top, left, bottom, right)
+	            new Insets(SPACE, SPACE, SPACE, SPACE), // Spaces (top, left, bottom, right)
 	            0,							// In space X
 	            0							// In space Y
 	    );
@@ -150,7 +166,7 @@ public class MainFrame extends JFrame
 	            50,						// Relative vertical space
 	            GridBagConstraints.CENTER,	// Where to place component when resizing
 	            GridBagConstraints.BOTH,	// How to rescale component
-	            new Insets(0, SPACE, 0, SPACE), // Spaces (top, left, bottom, right)
+	            new Insets(SPACE, SPACE, SPACE, SPACE), // Spaces (top, left, bottom, right)
 	            0,							// In space X
 	            0							// In space Y
 	    );
@@ -166,7 +182,7 @@ public class MainFrame extends JFrame
 	            100,							// Relative vertical space
 	            GridBagConstraints.CENTER,	// Where to place component when resizing
 	            GridBagConstraints.BOTH,	// How to rescale component
-	            new Insets(0, SPACE, 0, SPACE), // Spaces (top, left, bottom, right)
+	            new Insets(SPACE, SPACE, SPACE, SPACE), // Spaces (top, left, bottom, right)
 	            0,							// In space X
 	            0							// In space Y
 	    );
@@ -182,7 +198,7 @@ public class MainFrame extends JFrame
 	            100,							// Relative vertical space
 	            GridBagConstraints.CENTER,	// Where to place component when resizing
 	            GridBagConstraints.BOTH,	// How to rescale component
-	            new Insets(0, SPACE, 0, SPACE), // Spaces (top, left, bottom, right)
+	            new Insets(SPACE, SPACE, SPACE, SPACE), // Spaces (top, left, bottom, right)
 	            0,							// In space X
 	            0							// In space Y
 	    );
@@ -198,7 +214,7 @@ public class MainFrame extends JFrame
 	            100,							// Relative vertical space
 	            GridBagConstraints.CENTER,	// Where to place component when resizing
 	            GridBagConstraints.BOTH,	// How to rescale component
-	            new Insets(0, SPACE, 0, SPACE), // Spaces (top, left, bottom, right)
+	            new Insets(SPACE, SPACE, SPACE, SPACE), // Spaces (top, left, bottom, right)
 	            0,							// In space X
 	            0							// In space Y
 	    );
@@ -214,7 +230,7 @@ public class MainFrame extends JFrame
 	            100,							// Relative vertical space
 	            GridBagConstraints.CENTER,	// Where to place component when resizing
 	            GridBagConstraints.BOTH,	// How to rescale component
-	            new Insets(0, SPACE, 0, SPACE), // Spaces (top, left, bottom, right)
+	            new Insets(SPACE, SPACE, SPACE, SPACE), // Spaces (top, left, bottom, right)
 	            0,							// In space X
 	            0							// In space Y
 	    );
@@ -230,7 +246,7 @@ public class MainFrame extends JFrame
 	            100,							// Relative vertical space
 	            GridBagConstraints.CENTER,	// Where to place component when resizing
 	            GridBagConstraints.BOTH,	// How to rescale component
-	            new Insets(0, SPACE, 0, SPACE), // Spaces (top, left, bottom, right)
+	            new Insets(SPACE, SPACE, SPACE, SPACE), // Spaces (top, left, bottom, right)
 	            0,							// In space X
 	            0							// In space Y
 	    );
