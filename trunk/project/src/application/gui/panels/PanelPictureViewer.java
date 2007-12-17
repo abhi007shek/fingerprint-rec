@@ -43,9 +43,8 @@ public class PanelPictureViewer extends JPanel
 	
 	//---------------------------------------------------------- VARIABLES --//
 	JTextField titlePanel;
-	JPanel picturePanel;
+	PanelFingerprint picturePanel;
 	
-	BufferedImage buffer;
 
 	//------------------------------------------------------- CONSTRUCTORS --//
 	public PanelPictureViewer ( String pictureName)
@@ -55,7 +54,7 @@ public class PanelPictureViewer extends JPanel
 		
 		// Create objects
 		titlePanel = new JTextField(pictureName,10);
-		picturePanel = new JPanel();
+		picturePanel = new PanelFingerprint();
 		
 		titlePanel.setBackground(new Color(100,100,100));
 		titlePanel.setAlignmentX(JTextField.CENTER_ALIGNMENT);
@@ -108,17 +107,9 @@ public class PanelPictureViewer extends JPanel
 	}
 
 	//------------------------------------------------------------ METHODS --//	
-	public void setBufferedImage(BufferedImage buffer)
+	public void setFingerprint(BufferedImage buffer)
 	{
-		this.buffer = buffer; 
-	}
-	
-	@Override
-	public void repaint() 
-	{
-		super.repaint();
-		
-		picturePanel.getGraphics().drawImage(buffer, 0, 0, picturePanel.getWidth(), picturePanel.getHeight(), this);
+		picturePanel.setBufferedImage(buffer);
 	}
 
 	//---------------------------------------------------- PRIVATE METHODS --//
