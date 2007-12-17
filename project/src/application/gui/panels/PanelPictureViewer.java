@@ -26,12 +26,14 @@
 package application.gui.panels;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class PanelPictureViewer extends JPanel
 {
@@ -39,7 +41,7 @@ public class PanelPictureViewer extends JPanel
 	private int SPACE = 4;
 	
 	//---------------------------------------------------------- VARIABLES --//
-	JPanel titlePanel;
+	JTextField titlePanel;
 	JPanel picturePanel;
 
 	//------------------------------------------------------- CONSTRUCTORS --//
@@ -49,10 +51,14 @@ public class PanelPictureViewer extends JPanel
 		setBackground(new Color (0, 0, 0));
 		
 		// Create objects
-		titlePanel = new JPanel();
+		titlePanel = new JTextField(pictureName);
 		picturePanel = new JPanel();
 		
-		titlePanel.setBackground(Color.red);
+		titlePanel.setBackground(new Color(100,100,100));
+		titlePanel.setAlignmentX(JTextField.CENTER_ALIGNMENT);
+		titlePanel.setAlignmentY(JTextField.CENTER_ALIGNMENT);
+		titlePanel.setFont(new Font("Arial",0,15));
+		
 		picturePanel.setBackground(Color.green);
 		
 		// Set layouts
@@ -66,10 +72,10 @@ public class PanelPictureViewer extends JPanel
 	            1,							// Nb occupied lines
 	            1,							// Nb occupied columns
 	            100,						// Relative horizontal space
-	            20,							// Relative vertical space
+	            10,							// Relative vertical space
 	            GridBagConstraints.CENTER,	// Where to place component when resizing
 	            GridBagConstraints.BOTH,	// How to rescale component
-	            new Insets(SPACE, 0, SPACE, 0), // Spaces (top, left, bottom, right)
+	            new Insets(0, 0, SPACE, 0), // Spaces (top, left, bottom, right)
 	            0,							// In space X
 	            0							// In space Y
 	    );
@@ -82,10 +88,10 @@ public class PanelPictureViewer extends JPanel
 	            1,							// Nb occupied lines
 	            1,							// Nb occupied columns
 	            100,						// Relative horizontal space
-	            80,							// Relative vertical space
+	            90,							// Relative vertical space
 	            GridBagConstraints.CENTER,	// Where to place component when resizing
 	            GridBagConstraints.BOTH,	// How to rescale component
-	            new Insets(SPACE, 0, SPACE, 0), // Spaces (top, left, bottom, right)
+	            new Insets(SPACE, 0, 0, 0), // Spaces (top, left, bottom, right)
 	            0,							// In space X
 	            0							// In space Y
 	    );
