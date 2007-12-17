@@ -36,7 +36,7 @@ public class PanelPictureViewer extends JPanel
 	//---------------------------------------------------------- VARIABLES --//	
 
 	//------------------------------------------------------- CONSTRUCTORS --//
-	public PanelPictureViewer ()
+	public PanelPictureViewer ( String pictureName)
 	{
 		// Initialize values
 		setBackground(new Color (0, 0, 0));
