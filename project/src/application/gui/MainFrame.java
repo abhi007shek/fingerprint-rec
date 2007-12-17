@@ -98,12 +98,12 @@ public class MainFrame extends JFrame
 	
 	public void setOriginalImage(BufferedImage image)
 	{
-		pan1Original.setBufferedImage(image);
+		pan1Original.setFingerprint(image);
 	}
 	
 	public void setBinaryPicture(BufferedImage image)
 	{
-		pan2BinaryPicture.setBufferedImage(image);
+		pan2BinaryPicture.setFingerprint(image);
 	}
 
 	//---------------------------------------------------- PRIVATE METHODS --//
