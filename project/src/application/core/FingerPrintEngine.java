@@ -24,6 +24,8 @@
 +-----------------------------------------------------------------------------*/
 package application.core;
 
+import java.awt.Color;
+
 import application.gui.MainFrame;
 
 public class FingerPrintEngine implements MainFrameListener
@@ -58,7 +60,15 @@ public class FingerPrintEngine implements MainFrameListener
 		mainWindow.setOriginalImage(binaryPicture.getOriginalImage());
 		
 		// Print binary result
+		binaryPicture.setColors(Color.black, Color.green);
 		mainWindow.setBinaryPicture(binaryPicture.toBufferedImage());
+		
+		// Remove noise
+		binaryPicture.addBorders(1);
+		binaryPicture.removeNoise();
+		
+		mainWindow.setSmoothedPicture(binaryPicture.toBufferedImage());
+		// TODO
 	}
 	
 	@Override

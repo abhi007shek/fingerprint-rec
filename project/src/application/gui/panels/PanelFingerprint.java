@@ -43,6 +43,7 @@ public class PanelFingerprint extends JPanel
 	public void setBufferedImage (BufferedImage buffer)
 	{
 		this.buffer = buffer;
+		repaint();
 	}
 	//---------------------------------------------------- PRIVATE METHODS --//
 	@Override

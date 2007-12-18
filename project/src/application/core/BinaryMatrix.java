@@ -35,17 +35,24 @@ import javax.imageio.ImageIO;
 
 public class BinaryMatrix
 {	//---------------------------------------------------------- CONSTANTS --//
-	
+	Color DEFAULT_ZERO_COLOR = Color.black;
+	Color DEFAULT_ONE_COLOR = Color.pink;
 	//---------------------------------------------------------- VARIABLES --//	
 	boolean map [][] = null;
 	int width;
 	int height;
+	Color zeroColor;
+	Color oneColor;
 	
 	BufferedImage originalImage;
 	
 	//------------------------------------------------------- CONSTRUCTORS --//		
 	public BinaryMatrix (String filename)
 	{
+		// Initialize colors
+		zeroColor = DEFAULT_ZERO_COLOR;
+		oneColor = DEFAULT_ONE_COLOR;
+		
 		// Open and create the buffered image
 		try 
 		{
@@ -118,18 +125,18 @@ public class BinaryMatrix
 	
 	public BufferedImage toBufferedImage()
 	{
-		BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_BINARY);
+		BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		for (int i = 0 ; i < width ; ++i)
 		{
 			for (int j = 0 ; j < height ; ++j)
 			{
 				if (map[i][j] == false)
 				{
-					bufferedImage.setRGB(i, j, Color.black.getRGB());
+					bufferedImage.setRGB(i, j, zeroColor.getRGB());
 				}
 				else
 				{
-					bufferedImage.setRGB(i, j, Color.white.getRGB());
+					bufferedImage.setRGB(i, j, oneColor.getRGB());
 				}
 			}
 			System.out.println("");
@@ -141,6 +148,73 @@ public class BinaryMatrix
 	public BufferedImage getOriginalImage() 
 	{
 		return originalImage;
+	}
+	
+	public void setColors(Color zeroColor, Color oneColor)
+	{
+		this.zeroColor = zeroColor;
+		this.oneColor = oneColor;
+	}
+	
+	public void addBorders(int size)
+	{
+		boolean [][] newmap = new boolean [width + 2*size][height + 2*size];
+		
+		int limitTop = size;
+		int limitLeft = size;
+		int limitRight = width;
+		int limitBottom = height;
+		
+		width += 2*size;
+		height += 2*size;
+		
+		for (int i = 0 ; i < width ; ++i)
+		{
+			for (int j = 0 ; j < height ; ++j)
+			{
+				if ( i < limitLeft || i > limitRight || j < limitTop || j > limitBottom)
+				{
+					newmap[i][j] = false;
+				}
+				else
+				{
+					newmap[i][j] = map [i-size][j-size];
+				}
+			}
+		}
+		
+		map = newmap;
+	}
+	
+	public void removeNoise()
+	{
+		float [][] filter = {	{0.0625f,0.1250f,0.0625f},
+								{0.1250f,0.2500f,0.1250f},
+								{0.0625f,0.1250f,0.0625f}};
+		
+		int limWidth  = width -1;
+		int limHeight = height-1;
+		
+		for (int i = 1 ; i < limWidth ; ++i)
+		{
+			for (int j = 1 ; j < limHeight ; ++j)
+			{
+				float val = 0;
+				for (int ik = -1 ; ik <= 1 ; ++ik)
+		        {
+			        for (int jk = -1 ; jk <= 1 ; ++jk)
+			        {
+			        	val += booleanToInt(map[i+ik][j+jk])*filter[1+ik][1+jk];
+			        }
+		        }
+				map[i][j] = (val > 0.5);
+			}
+		}
+	}
+	
+	public void skeletonize()
+	{
+		
 	}
 
 	//---------------------------------------------------- PRIVATE METHODS --//
@@ -157,4 +231,9 @@ public class BinaryMatrix
 		
 		return total/(w*h);
 	}
+	
+	private int booleanToInt(boolean b)
+	{
+		return (b==true)?1:0;
+	}	
 }
