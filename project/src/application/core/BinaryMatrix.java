@@ -214,7 +214,87 @@ public class BinaryMatrix
 	
 	public void skeletonize()
 	{
+		int fstLin = 1;
+		int lstLin = height- 1;
+		int fstCol = 1;
+		int lstCol = width - 1;
 		
+		boolean [][] prevM = null;
+		boolean [][] newM = null;
+		
+		copyMatrix(map, prevM);
+		
+		int A, B;
+		
+		boolean [] neighbors;
+		
+		// We skeletonize until there are no changes between two iterations
+		while (true)
+		{
+			copyMatrix(prevM, newM);			
+			
+			// First subiteration, for NW and SE neigbors
+			for (int i = fstLin ; i <= lstLin ; ++i)
+			{
+				for (int j = fstCol ; j <= lstCol ; ++j)
+				{
+					neighbors = getNeigbors(i,j);
+					
+					// Get the decision values
+					B = getSum(neighbors);
+					A = getTransitions(neighbors);
+					
+					if ( ( B >= 2 ) && ( B <= 6 ) )
+					{
+						if ( A == 1 )
+						{
+							if (( booleanToInt(neighbors[0]) * booleanToInt(neighbors[2]) * booleanToInt(neighbors[4])) == 0 )
+		                    {
+		                    	if ( booleanToInt(neighbors[2]) * booleanToInt(neighbors[4]) * booleanToInt(neighbors[6]) == 0 )
+		                        {
+		                        	newM [i][j] = false;
+		                        }
+		                    }
+						}
+					}
+				}
+			}
+			
+			// Second subiteration, for NE and SW neigbors
+			for (int i = fstLin ; i <= lstLin ; ++i)
+			{
+				for (int j = fstCol ; j <= lstCol ; ++j)
+				{
+					neighbors = getNeigbors(i,j);
+					
+					// Get the decision values
+					B = getSum(neighbors);
+					A = getTransitions(neighbors);
+					
+					if ( ( B >= 2 ) && ( B <= 6 ) )
+					{
+						if ( A == 1 )
+						{
+							if (( booleanToInt(neighbors[0]) * booleanToInt(neighbors[2]) * booleanToInt(neighbors[6])) == 0 )
+		                    {
+		                    	if ( booleanToInt(neighbors[0]) * booleanToInt(neighbors[4]) * booleanToInt(neighbors[6]) == 0 )
+		                        {
+		                        	newM [i][j] = false;
+		                        }
+		                    }
+						}
+					}
+				}
+			}
+			
+			// Stop conditions		
+			if (equal(newM, prevM, width, height))
+			{
+				break;
+			}
+			
+			copyMatrix(prevM, newM);
+		}
 	}
 
 	//---------------------------------------------------- PRIVATE METHODS --//
@@ -235,5 +315,78 @@ public class BinaryMatrix
 	private int booleanToInt(boolean b)
 	{
 		return (b==true)?1:0;
-	}	
+	}
+	
+	private void copyMatrix (boolean [][] src, boolean [][] dst)
+	{
+		dst = new boolean [width][height];
+		
+		for (int i = 0 ; i < width ; ++i)
+		{
+			for (int j = 0 ; j < height ; ++j)
+			{
+				dst[i][j] = src[i][j]; 
+			}
+		}
+		
+	}
+	
+	private boolean[] getNeigbors(int i, int j)
+	{
+		boolean[] neigbors = new boolean[8];
+		
+		neigbors[0] = map[i-1][j+0];
+		neigbors[1] = map[i-1][j+1];
+		neigbors[2] = map[i+0][j+1];
+		neigbors[3] = map[i+1][j+1];
+		neigbors[4] = map[i+1][j+0];
+		neigbors[5] = map[i+1][j-1];
+		neigbors[6] = map[i+0][j-1];
+		neigbors[7] = map[i-1][j-1];
+		
+		return neigbors;
+	}
+	
+	private int getTransitions (boolean [] neighbors)
+	{
+		int nbTransitions = 0;
+		
+		for (int k = 0 ; k < 7 ; ++k )
+		{
+			if ((neighbors[k] == false) && ((neighbors[k+1] == true)))
+				++nbTransitions;
+		}
+		
+		if ((neighbors[7] == false) && ((neighbors[0] == true)))
+			++nbTransitions;
+		
+		return nbTransitions;
+	}
+	
+	private int getSum (boolean [] vals)
+	{
+		int max = vals.length;
+		int sum = 0;
+		
+		for (int k = 0 ; k < max ; ++k )
+		{
+			sum += booleanToInt(vals[k]);
+		}
+		
+		return sum;
+	}
+	
+	private boolean equal(boolean [][] A, boolean [][] B, int w, int h)
+	{
+		for (int i = 0 ; i < w ; ++i)
+		{
+			for (int j = 0 ; j < h ; ++j)
+			{
+				if (A[i][j] != B[i][j])
+					return false;
+			}
+		}
+		
+		return true;
+	}
 }

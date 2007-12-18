@@ -110,6 +110,12 @@ public class MainFrame extends JFrame
 	{
 		pan3NoiseRemoval.setFingerprint(image);
 	}
+
+	public void setSkeletonPicture(BufferedImage image)
+	{
+		pan4Skeleton.setFingerprint(image);
+	}
+	
 	
 
 	//---------------------------------------------------- PRIVATE METHODS --//

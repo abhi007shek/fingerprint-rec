@@ -66,8 +66,11 @@ public class FingerPrintEngine implements MainFrameListener
 		// Remove noise
 		binaryPicture.addBorders(1);
 		binaryPicture.removeNoise();
-		
 		mainWindow.setSmoothedPicture(binaryPicture.toBufferedImage());
+		
+		// Skeletonization
+		binaryPicture.skeletonize();
+		mainWindow.setSkeletonPicture(binaryPicture.toBufferedImage());
 		// TODO
 	}
 	
