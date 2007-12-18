@@ -25,6 +25,10 @@
 package application.core;
 
 import java.awt.Color;
+//import java.io.File;
+//import java.io.IOException;
+//
+//import javax.imageio.ImageIO;
 
 import application.gui.MainFrame;
 
@@ -70,8 +74,16 @@ public class FingerPrintEngine implements MainFrameListener
 		
 		// Skeletonization
 		binaryPicture.skeletonize();
-		binaryPicture.removeNoise();
 		mainWindow.setSkeletonPicture(binaryPicture.toBufferedImage());
+		
+//		try 
+//		{
+//			ImageIO.write(binaryPicture.toBufferedImage(), "bmp", new File("C:/temp/myImage2.bmp"));
+//		} catch (IOException e) {
+//			// TODO ENLEVER TOUT
+//			e.printStackTrace();
+//		}
+		
 		// TODO
 	}
 	

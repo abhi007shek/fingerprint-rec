@@ -29,7 +29,9 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -136,8 +138,13 @@ public class MainFrame extends JFrame
 	
 	private void initFrame()
 	{
-		setSize(1024, 256);
+		setSize(1200, 300);
 		setTitle("Fingerprint pattern extractor");
+
+		// Icon
+		Image icon = Toolkit.getDefaultToolkit().getImage("./ressources/fp_icon.png");
+		setIconImage(icon);
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		setBackground(Color.black);

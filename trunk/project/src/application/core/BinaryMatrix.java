@@ -91,7 +91,7 @@ public class BinaryMatrix
 			{
 				for (int j = 0 ; j < height ; ++j)
 				{
-					map[i][j] = !(greymap[i][j] > (greymean)); 
+					map[i][j] = !(greymap[i][j] > (greymean*0.95)); 
 				}
 			}
 		}
@@ -300,13 +300,17 @@ public class BinaryMatrix
 			{
 				break;
 			}
-			
-			copyMatrix(newM, prevM);
+			else
+			{
+				copyMatrix(newM, prevM);
+			}			
 		}
 		
 		// Return matrix
 		copyMatrix(newM, map);
+		System.out.println(nbTurns);
 	}
+	
 
 	//---------------------------------------------------- PRIVATE METHODS --//
 	private int getGreylevelMean( int [][] greymap, int w, int h)
@@ -351,6 +355,15 @@ public class BinaryMatrix
 		neigbors[5] = mat[i+1][j-1];
 		neigbors[6] = mat[i+0][j-1];
 		neigbors[7] = mat[i-1][j-1];
+		
+//		neigbors[0] = mat[i+0][j-1];
+//		neigbors[1] = mat[i+1][j-1];
+//		neigbors[2] = mat[i+1][j+0];
+//		neigbors[3] = mat[i+1][j+1];
+//		neigbors[4] = mat[i+0][j+1];
+//		neigbors[5] = mat[i-1][j+1];
+//		neigbors[6] = mat[i-1][j+0];
+//		neigbors[7] = mat[i-1][j-1];
 		
 		return neigbors;
 	}

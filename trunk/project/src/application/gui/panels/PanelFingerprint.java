@@ -26,6 +26,8 @@
 package application.gui.panels;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
@@ -51,6 +53,10 @@ public class PanelFingerprint extends JPanel
 	{
 		super.paintComponent(g);
 		
+		Graphics2D g2d=(Graphics2D) g;
+		
+		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+						     RenderingHints.VALUE_INTERPOLATION_BILINEAR); 
 		if (buffer != null)
 		{
 			g.drawImage(buffer,0,0,getWidth(), getHeight(), this);
