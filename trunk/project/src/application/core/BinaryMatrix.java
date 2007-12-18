@@ -91,7 +91,7 @@ public class BinaryMatrix
 			{
 				for (int j = 0 ; j < height ; ++j)
 				{
-					map[i][j] = !(greymap[i][j] > greymean); 
+					map[i][j] = !(greymap[i][j] > (greymean)); 
 				}
 			}
 		}
@@ -139,7 +139,6 @@ public class BinaryMatrix
 					bufferedImage.setRGB(i, j, oneColor.getRGB());
 				}
 			}
-			System.out.println("");
 		}
 		
 		return bufferedImage;
@@ -195,6 +194,9 @@ public class BinaryMatrix
 		int limWidth  = width -1;
 		int limHeight = height-1;
 		
+		boolean [][] newmap = new boolean [width][height];
+		copyMatrix(map, newmap);
+		
 		for (int i = 1 ; i < limWidth ; ++i)
 		{
 			for (int j = 1 ; j < limHeight ; ++j)
@@ -207,20 +209,22 @@ public class BinaryMatrix
 			        	val += booleanToInt(map[i+ik][j+jk])*filter[1+ik][1+jk];
 			        }
 		        }
-				map[i][j] = (val > 0.5);
+				newmap[i][j] = (val > 0.5);
 			}
 		}
+		
+		copyMatrix(newmap, map);
 	}
 	
 	public void skeletonize()
 	{
 		int fstLin = 1;
-		int lstLin = height- 1;
+		int lstLin = width - 1;
 		int fstCol = 1;
-		int lstCol = width - 1;
+		int lstCol = height - 1;
 		
-		boolean [][] prevM = null;
-		boolean [][] newM = null;
+		boolean [][] prevM = new boolean [width][height];;
+		boolean [][] newM = new boolean [width][height];;
 		
 		copyMatrix(map, prevM);
 		
@@ -228,17 +232,21 @@ public class BinaryMatrix
 		
 		boolean [] neighbors;
 		
+		int nbTurns = 0;
+		
 		// We skeletonize until there are no changes between two iterations
 		while (true)
 		{
+			nbTurns++;
+			
 			copyMatrix(prevM, newM);			
 			
 			// First subiteration, for NW and SE neigbors
-			for (int i = fstLin ; i <= lstLin ; ++i)
+			for (int i = fstLin ; i < lstLin ; ++i)
 			{
-				for (int j = fstCol ; j <= lstCol ; ++j)
+				for (int j = fstCol ; j < lstCol ; ++j)
 				{
-					neighbors = getNeigbors(i,j);
+					neighbors = getNeigbors(newM, i,j);
 					
 					// Get the decision values
 					B = getSum(neighbors);
@@ -248,9 +256,9 @@ public class BinaryMatrix
 					{
 						if ( A == 1 )
 						{
-							if (( booleanToInt(neighbors[0]) * booleanToInt(neighbors[2]) * booleanToInt(neighbors[4])) == 0 )
+							if ((neighbors[0] && neighbors[2] && neighbors[4]) == false )
 		                    {
-		                    	if ( booleanToInt(neighbors[2]) * booleanToInt(neighbors[4]) * booleanToInt(neighbors[6]) == 0 )
+		                    	if ((neighbors[2] && neighbors[4] && neighbors[5]) == false )
 		                        {
 		                        	newM [i][j] = false;
 		                        }
@@ -261,11 +269,11 @@ public class BinaryMatrix
 			}
 			
 			// Second subiteration, for NE and SW neigbors
-			for (int i = fstLin ; i <= lstLin ; ++i)
+			for (int i = fstLin ; i < lstLin ; ++i)
 			{
-				for (int j = fstCol ; j <= lstCol ; ++j)
+				for (int j = fstCol ; j < lstCol ; ++j)
 				{
-					neighbors = getNeigbors(i,j);
+					neighbors = getNeigbors(newM,i,j);
 					
 					// Get the decision values
 					B = getSum(neighbors);
@@ -275,9 +283,9 @@ public class BinaryMatrix
 					{
 						if ( A == 1 )
 						{
-							if (( booleanToInt(neighbors[0]) * booleanToInt(neighbors[2]) * booleanToInt(neighbors[6])) == 0 )
+							if ((neighbors[0] && neighbors[2] && neighbors[6]) == false )
 		                    {
-		                    	if ( booleanToInt(neighbors[0]) * booleanToInt(neighbors[4]) * booleanToInt(neighbors[6]) == 0 )
+		                    	if ((neighbors[0] && neighbors[4] && neighbors[6]) == false )
 		                        {
 		                        	newM [i][j] = false;
 		                        }
@@ -293,8 +301,11 @@ public class BinaryMatrix
 				break;
 			}
 			
-			copyMatrix(prevM, newM);
+			copyMatrix(newM, prevM);
 		}
+		
+		// Return matrix
+		copyMatrix(newM, map);
 	}
 
 	//---------------------------------------------------- PRIVATE METHODS --//
@@ -319,30 +330,27 @@ public class BinaryMatrix
 	
 	private void copyMatrix (boolean [][] src, boolean [][] dst)
 	{
-		dst = new boolean [width][height];
-		
 		for (int i = 0 ; i < width ; ++i)
 		{
 			for (int j = 0 ; j < height ; ++j)
 			{
-				dst[i][j] = src[i][j]; 
+				dst[i][j] = src[i][j];
 			}
 		}
-		
 	}
 	
-	private boolean[] getNeigbors(int i, int j)
+	private boolean[] getNeigbors(boolean [][] mat, int i, int j)
 	{
 		boolean[] neigbors = new boolean[8];
 		
-		neigbors[0] = map[i-1][j+0];
-		neigbors[1] = map[i-1][j+1];
-		neigbors[2] = map[i+0][j+1];
-		neigbors[3] = map[i+1][j+1];
-		neigbors[4] = map[i+1][j+0];
-		neigbors[5] = map[i+1][j-1];
-		neigbors[6] = map[i+0][j-1];
-		neigbors[7] = map[i-1][j-1];
+		neigbors[0] = mat[i-1][j+0];
+		neigbors[1] = mat[i-1][j+1];
+		neigbors[2] = mat[i+0][j+1];
+		neigbors[3] = mat[i+1][j+1];
+		neigbors[4] = mat[i+1][j+0];
+		neigbors[5] = mat[i+1][j-1];
+		neigbors[6] = mat[i+0][j-1];
+		neigbors[7] = mat[i-1][j-1];
 		
 		return neigbors;
 	}
