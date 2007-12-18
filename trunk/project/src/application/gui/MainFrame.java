@@ -106,6 +106,12 @@ public class MainFrame extends JFrame
 		pan2BinaryPicture.setFingerprint(image);
 	}
 
+	public void setSmoothedPicture(BufferedImage image)
+	{
+		pan3NoiseRemoval.setFingerprint(image);
+	}
+	
+
 	//---------------------------------------------------- PRIVATE METHODS --//
 	private void initButtons()
 	{
