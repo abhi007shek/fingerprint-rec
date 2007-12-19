@@ -34,7 +34,10 @@ import javax.imageio.ImageIO;
 
 
 public class BinaryMatrix
-{	//---------------------------------------------------------- CONSTANTS --//
+
+{
+	public enum direction { NONE, HORIZONTAL, VERTICAL, POSITIVE, NEGATIVE};
+	//---------------------------------------------------------- CONSTANTS --//
 	Color DEFAULT_ZERO_COLOR = Color.black;
 	Color DEFAULT_ONE_COLOR = Color.pink;
 	//---------------------------------------------------------- VARIABLES --//	
@@ -232,13 +235,9 @@ public class BinaryMatrix
 		
 		boolean [] neighbors;
 		
-		int nbTurns = 0;
-		
 		// We skeletonize until there are no changes between two iterations
 		while (true)
 		{
-			nbTurns++;
-			
 			copyMatrix(prevM, newM);			
 			
 			// First subiteration, for NW and SE neigbors
@@ -308,11 +307,56 @@ public class BinaryMatrix
 		
 		// Return matrix
 		copyMatrix(newM, map);
-		System.out.println(nbTurns);
 	}
-	
+
+	public BufferedImage directionToBufferedImage(direction [][] dirMatrix)
+	{
+		BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		
+		for (int i = 0 ; i < width ; ++i)
+		{
+			for (int j = 0 ; j < height ; ++j)
+			{
+				bufferedImage.setRGB(i, j, (dirToColor (dirMatrix[i][j])).getRGB());
+			}
+		}
+		
+		return bufferedImage;
+	}
 
 	//---------------------------------------------------- PRIVATE METHODS --//
+	public direction [][] getDirections()
+	{
+		// Direction patterns
+		direction [][] dirMatrix = new direction [width][height];
+		
+		int minI = 1;
+		int maxI = width - 2;
+		int minJ = 1;
+		int maxJ = height - 2;
+		
+		for (int i = 0 ; i < width ; ++i)
+		{
+			for (int j = 0 ; j < height ; ++j)
+			{
+				if ((map[i][j] == false) || (i < minI) || (i > maxI) || (j < minJ) || (j > maxJ) )
+					dirMatrix[i][j] = direction.NONE;
+				else if ((map[i-1][j+1] == true) && (map[i+1][j-1] == true))
+					dirMatrix[i][j] = direction.POSITIVE;
+				else if ((map[i-1][j-1] == true) && (map[i+1][j+1] == true))
+					dirMatrix[i][j] = direction.NEGATIVE;
+				else if ((map[i][j-1] == true) && (map[i][j+1] == true))
+					dirMatrix[i][j] = direction.VERTICAL;
+				else if ((map[i-1][j] == true) && (map[i+1][j] == true))
+					dirMatrix[i][j] = direction.HORIZONTAL;
+				else
+					dirMatrix[i][j] = direction.NONE;
+			}
+		}
+		
+		return dirMatrix;
+	}
+	
 	private int getGreylevelMean( int [][] greymap, int w, int h)
 	{
 		int total = 0;
@@ -409,5 +453,28 @@ public class BinaryMatrix
 		}
 		
 		return true;
+	}
+	
+	private Color dirToColor(direction dir)
+	{
+		switch (dir) {
+		case NONE:
+			return Color.black;
+			
+		case HORIZONTAL:
+			return Color.red;
+			
+		case POSITIVE:
+			return Color.green;
+			
+		case NEGATIVE:
+			return Color.yellow;
+			
+		case VERTICAL:
+			return Color.cyan;
+						
+		default:
+			return Color.black;
+		}
 	}
 }

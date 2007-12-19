@@ -30,6 +30,7 @@ import java.awt.Color;
 //
 //import javax.imageio.ImageIO;
 
+import application.core.BinaryMatrix.direction;
 import application.gui.MainFrame;
 
 public class FingerPrintEngine implements MainFrameListener
@@ -75,6 +76,10 @@ public class FingerPrintEngine implements MainFrameListener
 		// Skeletonization
 		binaryPicture.skeletonize();
 		mainWindow.setSkeletonPicture(binaryPicture.toBufferedImage());
+		
+		// Core extraction
+		direction [][] dirMatrix = binaryPicture.getDirections();
+		mainWindow.setCorePicture(binaryPicture.directionToBufferedImage(dirMatrix));
 		
 //		try 
 //		{
