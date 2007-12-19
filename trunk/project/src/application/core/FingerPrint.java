@@ -26,6 +26,7 @@
 package application.core;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +34,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 
-public class BinaryMatrix
+public class FingerPrint
 
 {
 	public enum direction { NONE, HORIZONTAL, VERTICAL, POSITIVE, NEGATIVE};
@@ -41,7 +42,10 @@ public class BinaryMatrix
 	Color DEFAULT_ZERO_COLOR = Color.black;
 	Color DEFAULT_ONE_COLOR = Color.pink;
 	//---------------------------------------------------------- VARIABLES --//	
-	boolean map [][] = null;
+	boolean binMap [][];
+	int [][] greyMap;
+	int greymean;
+	
 	int width;
 	int height;
 	Color zeroColor;
@@ -50,7 +54,7 @@ public class BinaryMatrix
 	BufferedImage originalImage;
 	
 	//------------------------------------------------------- CONSTRUCTORS --//		
-	public BinaryMatrix (String filename)
+	public FingerPrint (String filename)
 	{
 		// Initialize colors
 		zeroColor = DEFAULT_ZERO_COLOR;
@@ -66,7 +70,8 @@ public class BinaryMatrix
 			height = originalImage.getHeight();
 			
 			
-			int [][] greymap = new int [width][height];
+			greyMap = new int [width][height];
+			binMap = new boolean [width][height];
 			
 			// Generate greymap
 			int curColor;
@@ -81,22 +86,12 @@ public class BinaryMatrix
 					int B = (curColor      ) & 0xFF;
 					
 					int greyVal = (R + G + B) / 3;
-					greymap[i][j] = greyVal;
+					greyMap[i][j] = greyVal;
 				}
 			}
 			
 			// Get the grey mean
-			int greymean = getGreylevelMean(greymap, width, height);
-			
-			// Generate the boolean value
-			map = new boolean [width][height];
-			for (int i = 0 ; i < width ; ++i)
-			{
-				for (int j = 0 ; j < height ; ++j)
-				{
-					map[i][j] = !(greymap[i][j] > (greymean*0.95)); 
-				}
-			}
+			greymean = getGreylevelMean(greyMap, width, height);
 		}
 		catch (IOException e) 
 		{
@@ -106,16 +101,6 @@ public class BinaryMatrix
 	}
 
 	//------------------------------------------------------------ METHODS --//	
-	boolean get(int x, int y)
-	{
-		return map[x][y];
-	}
-	
-	void set(int x, int y, boolean val)
-	{
-		map[x][y] = val;
-	}
-
 	public int getWidth() 
 	{
 		return width;
@@ -133,7 +118,7 @@ public class BinaryMatrix
 		{
 			for (int j = 0 ; j < height ; ++j)
 			{
-				if (map[i][j] == false)
+				if (binMap[i][j] == false)
 				{
 					bufferedImage.setRGB(i, j, zeroColor.getRGB());
 				}
@@ -145,6 +130,112 @@ public class BinaryMatrix
 		}
 		
 		return bufferedImage;
+	}
+	
+	public void binarizeMean()
+	{
+		// Generate the boolean value
+		for (int i = 0 ; i < width ; ++i)
+		{
+			for (int j = 0 ; j < height ; ++j)
+			{
+				binMap[i][j] = !(greyMap[i][j] > (greymean)); 
+			}
+		}
+	}
+	
+	public void binarizeLocalMean()
+	{
+		int windowSize = 20;
+		int step = 20;
+		
+		float localGreyMean;
+		for (int i = 0 ; i < width ; i += step)
+		{
+			for (int j = 0 ; j < height ; j += step)
+			{					
+				// Get greymean
+				localGreyMean = 0;
+				int ik, jk = 0;
+				for (ik = i ; ik < (i + windowSize); ++ik)
+				{
+					if (ik >= width)
+						break;
+					
+					// Get greymean
+					for (jk = j ; jk < (j + windowSize); ++jk)
+					{
+						if (jk >= height)
+							break;
+						
+						localGreyMean += greyMap[ik][jk];
+					}
+				}
+				
+				if (jk*ik != 0)
+				{
+					localGreyMean = localGreyMean / ((ik-i)*(jk-j));
+				}
+				
+				
+				// If the local grey mean is too high (too permissive)
+				// we take the global greymean
+				if (localGreyMean > greymean)
+				{
+					localGreyMean = 0.75f*greymean + 0.25f*localGreyMean;
+				}
+				
+				// Binarize window
+				for (ik = i ; ik < (i + windowSize); ++ik)
+				{
+					if (ik >= width)
+						break;
+					
+					// Get greymean
+					for (jk = j ; jk < (j + windowSize); ++jk)
+					{
+						if (jk >= height)
+							break;
+						
+						binMap[ik][jk] = !(greyMap[ik][jk] > (localGreyMean)); 
+					}
+				}
+				
+			}
+		}
+		
+		
+		
+//		for (int i = minI ; i < maxI ; ++i)
+//		{
+//			for (int j = minJ ; j < maxJ ; ++j)
+//			{				
+//				indexCur = 0;
+//				
+//				// Check the number of pixel in each direction
+//				for (int ik = i-windowSize ; ik < i+windowSize ; ++ik)
+//				{
+//					for (int jk = j-windowSize ; jk < j+windowSize ; ++jk)
+//					{
+//						if (dirMatrix[ik][jk] == direction.HORIZONTAL)
+//							indexCur += 8;
+//						if (dirMatrix[ik][jk] == direction.VERTICAL)
+//							indexCur += 2;
+//						else if	((dirMatrix[ik][jk] == direction.POSITIVE) ||
+//								(dirMatrix[ik][jk] == direction.NEGATIVE))
+//							indexCur += 1;
+//					}
+//				}
+//				
+//				// Check if the new point is better
+//				if (indexCur >= indexMax)
+//				{
+//					indexMax = indexCur;
+//					core.x = i;
+//					core.y = j;
+//				}
+//			}
+//		}
 	}
 	
 	public BufferedImage getOriginalImage() 
@@ -180,12 +271,12 @@ public class BinaryMatrix
 				}
 				else
 				{
-					newmap[i][j] = map [i-size][j-size];
+					newmap[i][j] = binMap [i-size][j-size];
 				}
 			}
 		}
 		
-		map = newmap;
+		binMap = newmap;
 	}
 	
 	public void removeNoise()
@@ -198,7 +289,7 @@ public class BinaryMatrix
 		int limHeight = height-1;
 		
 		boolean [][] newmap = new boolean [width][height];
-		copyMatrix(map, newmap);
+		copyMatrix(binMap, newmap);
 		
 		for (int i = 1 ; i < limWidth ; ++i)
 		{
@@ -209,14 +300,14 @@ public class BinaryMatrix
 		        {
 			        for (int jk = -1 ; jk <= 1 ; ++jk)
 			        {
-			        	val += booleanToInt(map[i+ik][j+jk])*filter[1+ik][1+jk];
+			        	val += booleanToInt(binMap[i+ik][j+jk])*filter[1+ik][1+jk];
 			        }
 		        }
 				newmap[i][j] = (val > 0.5);
 			}
 		}
 		
-		copyMatrix(newmap, map);
+		copyMatrix(newmap, binMap);
 	}
 	
 	public void skeletonize()
@@ -229,7 +320,7 @@ public class BinaryMatrix
 		boolean [][] prevM = new boolean [width][height];;
 		boolean [][] newM = new boolean [width][height];;
 		
-		copyMatrix(map, prevM);
+		copyMatrix(binMap, prevM);
 		
 		int A, B;
 		
@@ -306,7 +397,7 @@ public class BinaryMatrix
 		}
 		
 		// Return matrix
-		copyMatrix(newM, map);
+		copyMatrix(newM, binMap);
 	}
 
 	public BufferedImage directionToBufferedImage(direction [][] dirMatrix)
@@ -323,8 +414,7 @@ public class BinaryMatrix
 		
 		return bufferedImage;
 	}
-
-	//---------------------------------------------------- PRIVATE METHODS --//
+	
 	public direction [][] getDirections()
 	{
 		// Direction patterns
@@ -339,15 +429,15 @@ public class BinaryMatrix
 		{
 			for (int j = 0 ; j < height ; ++j)
 			{
-				if ((map[i][j] == false) || (i < minI) || (i > maxI) || (j < minJ) || (j > maxJ) )
+				if ((binMap[i][j] == false) || (i < minI) || (i > maxI) || (j < minJ) || (j > maxJ) )
 					dirMatrix[i][j] = direction.NONE;
-				else if ((map[i-1][j+1] == true) && (map[i+1][j-1] == true))
+				else if ((binMap[i-1][j+1] == true) && (binMap[i+1][j-1] == true))
 					dirMatrix[i][j] = direction.POSITIVE;
-				else if ((map[i-1][j-1] == true) && (map[i+1][j+1] == true))
+				else if ((binMap[i-1][j-1] == true) && (binMap[i+1][j+1] == true))
 					dirMatrix[i][j] = direction.NEGATIVE;
-				else if ((map[i][j-1] == true) && (map[i][j+1] == true))
+				else if ((binMap[i][j-1] == true) && (binMap[i][j+1] == true))
 					dirMatrix[i][j] = direction.VERTICAL;
-				else if ((map[i-1][j] == true) && (map[i+1][j] == true))
+				else if ((binMap[i-1][j] == true) && (binMap[i+1][j] == true))
 					dirMatrix[i][j] = direction.HORIZONTAL;
 				else
 					dirMatrix[i][j] = direction.NONE;
@@ -356,6 +446,56 @@ public class BinaryMatrix
 		
 		return dirMatrix;
 	}
+	
+	public Point getCore (direction [][] dirMatrix)
+	{
+		Point core = new Point();
+		
+		int windowSize = 10;
+		
+		int minI = windowSize;
+		int maxI = width - windowSize;
+		int minJ = windowSize;
+		int maxJ = height - windowSize;
+		
+		int indexMax = 0;
+		int indexCur = 0;
+		
+		for (int i = minI ; i < maxI ; ++i)
+		{
+			for (int j = minJ ; j < maxJ ; ++j)
+			{				
+				indexCur = 0;
+				
+				// Check the number of pixel in each direction
+				for (int ik = i-windowSize ; ik < i+windowSize ; ++ik)
+				{
+					for (int jk = j-windowSize ; jk < j+windowSize ; ++jk)
+					{
+						if (dirMatrix[ik][jk] == direction.HORIZONTAL)
+							indexCur += 8;
+						if (dirMatrix[ik][jk] == direction.VERTICAL)
+							indexCur += 2;
+						else if	((dirMatrix[ik][jk] == direction.POSITIVE) ||
+								(dirMatrix[ik][jk] == direction.NEGATIVE))
+							indexCur += 1;
+					}
+				}
+				
+				// Check if the new point is better
+				if (indexCur >= indexMax)
+				{
+					indexMax = indexCur;
+					core.x = i;
+					core.y = j;
+				}
+			}
+		}
+		
+		return core;
+	}
+
+	//---------------------------------------------------- PRIVATE METHODS --//
 	
 	private int getGreylevelMean( int [][] greymap, int w, int h)
 	{
@@ -399,16 +539,7 @@ public class BinaryMatrix
 		neigbors[5] = mat[i+1][j-1];
 		neigbors[6] = mat[i+0][j-1];
 		neigbors[7] = mat[i-1][j-1];
-		
-//		neigbors[0] = mat[i+0][j-1];
-//		neigbors[1] = mat[i+1][j-1];
-//		neigbors[2] = mat[i+1][j+0];
-//		neigbors[3] = mat[i+1][j+1];
-//		neigbors[4] = mat[i+0][j+1];
-//		neigbors[5] = mat[i-1][j+1];
-//		neigbors[6] = mat[i-1][j+0];
-//		neigbors[7] = mat[i-1][j-1];
-		
+	
 		return neigbors;
 	}
 	
@@ -457,24 +588,25 @@ public class BinaryMatrix
 	
 	private Color dirToColor(direction dir)
 	{
-		switch (dir) {
-		case NONE:
-			return Color.black;
-			
-		case HORIZONTAL:
-			return Color.red;
-			
-		case POSITIVE:
-			return Color.green;
-			
-		case NEGATIVE:
-			return Color.yellow;
-			
-		case VERTICAL:
-			return Color.cyan;
-						
-		default:
-			return Color.black;
+		switch (dir) 
+		{
+			case NONE:
+				return Color.black;
+				
+			case HORIZONTAL:
+				return Color.red;
+				
+			case POSITIVE:
+				return Color.green;
+				
+			case NEGATIVE:
+				return Color.yellow;
+				
+			case VERTICAL:
+				return Color.cyan;
+							
+			default:
+				return Color.black;
 		}
 	}
 }

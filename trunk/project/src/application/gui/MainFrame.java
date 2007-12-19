@@ -59,12 +59,14 @@ public class MainFrame extends JFrame
 	private JPanel bkgPanel;
 	
 	// Picture panels
-	private PanelPictureViewer pan1Original;
-	private PanelPictureViewer pan2BinaryPicture;
-	private PanelPictureViewer pan3NoiseRemoval;
-	private PanelPictureViewer pan4Skeleton;
-	private PanelPictureViewer pan5CoreDetection;
-	private PanelPictureViewer pan6Minutiae;
+	private PanelPictureViewer panOriginal;
+	private PanelPictureViewer panBinaryPicture;
+	private PanelPictureViewer panBinaryLocalPicture;
+	private PanelPictureViewer panNoiseRemoval;
+	private PanelPictureViewer panSkeleton;
+	private PanelPictureViewer panDirection;
+	private PanelPictureViewer panCore;
+	private PanelPictureViewer panMinutiae;
 	
 	// Buttons
 	private JButton btBrowse;
@@ -100,27 +102,37 @@ public class MainFrame extends JFrame
 	
 	public void setOriginalImage(BufferedImage image)
 	{
-		pan1Original.setFingerprint(image);
+		panOriginal.setFingerprint(image);
 	}
 	
+	public void setBinaryLocalPicture(BufferedImage image)
+	{
+		panBinaryLocalPicture.setFingerprint(image);
+	}
+
 	public void setBinaryPicture(BufferedImage image)
 	{
-		pan2BinaryPicture.setFingerprint(image);
+		panBinaryPicture.setFingerprint(image);
 	}
 
 	public void setSmoothedPicture(BufferedImage image)
 	{
-		pan3NoiseRemoval.setFingerprint(image);
+		panNoiseRemoval.setFingerprint(image);
 	}
 
 	public void setSkeletonPicture(BufferedImage image)
 	{
-		pan4Skeleton.setFingerprint(image);
+		panSkeleton.setFingerprint(image);
 	}
+	
+	public void setDirectionPicture(BufferedImage image)
+	{
+		panDirection.setFingerprint(image);
+	}	
 	
 	public void setCorePicture(BufferedImage image)
 	{
-		pan5CoreDetection.setFingerprint(image);
+		panCore.setFingerprint(image);
 	}	
 
 	//---------------------------------------------------- PRIVATE METHODS --//
@@ -141,7 +153,7 @@ public class MainFrame extends JFrame
 	
 	private void initFrame()
 	{
-		setSize(1200, 300);
+		setSize(800, 600);
 		setTitle("Fingerprint pattern extractor");
 
 		// Icon
@@ -159,12 +171,14 @@ public class MainFrame extends JFrame
 		bkgPanel = new JPanel();
 		
 		// Picture panels
-		pan1Original = new PanelPictureViewer("Original");
-		pan2BinaryPicture = new PanelPictureViewer("Binary");
-		pan3NoiseRemoval = new PanelPictureViewer("Smoothed");
-		pan4Skeleton = new PanelPictureViewer("Skeleton");
-		pan5CoreDetection = new PanelPictureViewer("Core");
-		pan6Minutiae = new PanelPictureViewer("Minutiae");
+		panOriginal = new PanelPictureViewer("1.Original");
+		panBinaryPicture = new PanelPictureViewer("2.Binary (mean)");
+		panBinaryLocalPicture = new PanelPictureViewer("3.Binary (local)");
+		panNoiseRemoval = new PanelPictureViewer("4.Smoothed");
+		panSkeleton = new PanelPictureViewer("5.Skeleton");
+		panDirection = new PanelPictureViewer("6.Direction");
+		panCore = new PanelPictureViewer("7.Core");
+		panMinutiae = new PanelPictureViewer("8.Minutiae");
 		
 		// Buttons
 		btBrowse = new JButton("...");
@@ -180,12 +194,14 @@ public class MainFrame extends JFrame
 	private void setLayouts()
 	{
 		// Add panels to the main panel		
-		bkgPanel.add(pan1Original);
-		bkgPanel.add(pan2BinaryPicture);
-		bkgPanel.add(pan3NoiseRemoval);
-		bkgPanel.add(pan4Skeleton);
-		bkgPanel.add(pan5CoreDetection);
-		bkgPanel.add(pan6Minutiae);
+		bkgPanel.add(panOriginal);
+		bkgPanel.add(panBinaryPicture);
+		bkgPanel.add(panBinaryLocalPicture);
+		bkgPanel.add(panNoiseRemoval);
+		bkgPanel.add(panSkeleton);
+		bkgPanel.add(panDirection);
+		bkgPanel.add(panCore);
+		bkgPanel.add(panMinutiae);
 		
 		// Add buttons
 		bkgPanel.add(btBrowse);
@@ -206,7 +222,7 @@ public class MainFrame extends JFrame
 	            1,							// Nb occupied lines
 	            1,							// Nb occupied columns
 	            4,						    // Relative horizontal space
-	            50,							// Relative vertical space
+	            25,							// Relative vertical space
 	            GridBagConstraints.CENTER,	// Where to place component when resizing
 	            GridBagConstraints.BOTH,	// How to rescale component
 	            new Insets(SPACE, SPACE, SPACE, SPACE), // Spaces (top, left, bottom, right)
@@ -222,7 +238,7 @@ public class MainFrame extends JFrame
 	            1,							// Nb occupied lines
 	            1,							// Nb occupied columns
 	            4,						    // Relative horizontal space
-	            50,							// Relative vertical space
+	            25,							// Relative vertical space
 	            GridBagConstraints.CENTER,	// Where to place component when resizing
 	            GridBagConstraints.BOTH,	// How to rescale component
 	            new Insets(SPACE, SPACE, SPACE, SPACE), // Spaces (top, left, bottom, right)
@@ -238,14 +254,14 @@ public class MainFrame extends JFrame
 	            1,							// Nb occupied lines
 	            2,							// Nb occupied columns
 	            20,							// Relative horizontal space
-	            50,						// Relative vertical space
+	            25,						// Relative vertical space
 	            GridBagConstraints.CENTER,	// Where to place component when resizing
 	            GridBagConstraints.BOTH,	// How to rescale component
 	            new Insets(SPACE, SPACE, SPACE, SPACE), // Spaces (top, left, bottom, right)
 	            0,							// In space X
 	            0							// In space Y
 	    );
-		gbLayoutPicturesPanel.setConstraints(pan1Original, gbConstPanel1);
+		gbLayoutPicturesPanel.setConstraints(panOriginal, gbConstPanel1);
 
 		// Panel 2 constraints
 		GridBagConstraints gbConstPanel2 = new GridBagConstraints (	
@@ -254,14 +270,14 @@ public class MainFrame extends JFrame
 	            1,							// Nb occupied lines
 	            2,							// Nb occupied columns
 	            20,							// Relative horizontal space
-	            100,							// Relative vertical space
+	            25,							// Relative vertical space
 	            GridBagConstraints.CENTER,	// Where to place component when resizing
 	            GridBagConstraints.BOTH,	// How to rescale component
 	            new Insets(SPACE, SPACE, SPACE, SPACE), // Spaces (top, left, bottom, right)
 	            0,							// In space X
 	            0							// In space Y
 	    );
-		gbLayoutPicturesPanel.setConstraints(pan2BinaryPicture, gbConstPanel2);
+		gbLayoutPicturesPanel.setConstraints(panBinaryPicture, gbConstPanel2);
 		
 		// Panel 3 constraints
 		GridBagConstraints gbConstPanel3 = new GridBagConstraints (	
@@ -270,62 +286,94 @@ public class MainFrame extends JFrame
 	            1,							// Nb occupied lines
 	            2,							// Nb occupied columns
 	            20,							// Relative horizontal space
-	            100,							// Relative vertical space
+	            50,							// Relative vertical space
 	            GridBagConstraints.CENTER,	// Where to place component when resizing
 	            GridBagConstraints.BOTH,	// How to rescale component
 	            new Insets(SPACE, SPACE, SPACE, SPACE), // Spaces (top, left, bottom, right)
 	            0,							// In space X
 	            0							// In space Y
 	    );
-		gbLayoutPicturesPanel.setConstraints(pan3NoiseRemoval, gbConstPanel3);
+		gbLayoutPicturesPanel.setConstraints(panBinaryLocalPicture, gbConstPanel3);
 		
 		// Panel 4 constraints
 		GridBagConstraints gbConstPanel4 = new GridBagConstraints (	
 				4,							// Column number
 	            0,							// Line number
-	            1,							// Nb occupied lines
+	            2,							// Nb occupied lines
 	            2,							// Nb occupied columns
 	            20,							// Relative horizontal space
-	            100,							// Relative vertical space
+	            50,							// Relative vertical space
 	            GridBagConstraints.CENTER,	// Where to place component when resizing
 	            GridBagConstraints.BOTH,	// How to rescale component
 	            new Insets(SPACE, SPACE, SPACE, SPACE), // Spaces (top, left, bottom, right)
 	            0,							// In space X
 	            0							// In space Y
 	    );
-		gbLayoutPicturesPanel.setConstraints(pan4Skeleton, gbConstPanel4);
+		gbLayoutPicturesPanel.setConstraints(panNoiseRemoval, gbConstPanel4);
 		
 		// Panel 5 constraints
 		GridBagConstraints gbConstPanel5 = new GridBagConstraints (	
-				5,							// Column number
-	            0,							// Line number
+				1,							// Column number
+	            2,							// Line number
 	            1,							// Nb occupied lines
 	            2,							// Nb occupied columns
 	            20,							// Relative horizontal space
-	            100,							// Relative vertical space
+	            50,							// Relative vertical space
 	            GridBagConstraints.CENTER,	// Where to place component when resizing
 	            GridBagConstraints.BOTH,	// How to rescale component
 	            new Insets(SPACE, SPACE, SPACE, SPACE), // Spaces (top, left, bottom, right)
 	            0,							// In space X
 	            0							// In space Y
 	    );
-		gbLayoutPicturesPanel.setConstraints(pan5CoreDetection, gbConstPanel5);
+		gbLayoutPicturesPanel.setConstraints(panSkeleton, gbConstPanel5);
 		
 		// Panel 6 constraints
 		GridBagConstraints gbConstPanel6 = new GridBagConstraints (	
-				6,							// Column number
-	            0,							// Line number
+				2,							// Column number
+	            2,							// Line number
 	            1,							// Nb occupied lines
 	            2,							// Nb occupied columns
 	            20,							// Relative horizontal space
-	            100,							// Relative vertical space
+	            50,							// Relative vertical space
 	            GridBagConstraints.CENTER,	// Where to place component when resizing
 	            GridBagConstraints.BOTH,	// How to rescale component
 	            new Insets(SPACE, SPACE, SPACE, SPACE), // Spaces (top, left, bottom, right)
 	            0,							// In space X
 	            0							// In space Y
 	    );
-		gbLayoutPicturesPanel.setConstraints(pan6Minutiae, gbConstPanel6);
+		gbLayoutPicturesPanel.setConstraints(panDirection, gbConstPanel6);
+		
+		// Panel 7 constraints
+		GridBagConstraints gbConstPanel7 = new GridBagConstraints (	
+				3,							// Column number
+	            2,							// Line number
+	            1,							// Nb occupied lines
+	            2,							// Nb occupied columns
+	            20,							// Relative horizontal space
+	            50,							// Relative vertical space
+	            GridBagConstraints.CENTER,	// Where to place component when resizing
+	            GridBagConstraints.BOTH,	// How to rescale component
+	            new Insets(SPACE, SPACE, SPACE, SPACE), // Spaces (top, left, bottom, right)
+	            0,							// In space X
+	            0							// In space Y
+	    );
+		gbLayoutPicturesPanel.setConstraints(panCore, gbConstPanel7);
+		
+		// Panel 8 constraints
+		GridBagConstraints gbConstPanel8 = new GridBagConstraints (	
+				4,							// Column number
+	            2,							// Line number
+	            1,							// Nb occupied lines
+	            2,							// Nb occupied columns
+	            20,							// Relative horizontal space
+	            50,							// Relative vertical space
+	            GridBagConstraints.CENTER,	// Where to place component when resizing
+	            GridBagConstraints.BOTH,	// How to rescale component
+	            new Insets(SPACE, SPACE, SPACE, SPACE), // Spaces (top, left, bottom, right)
+	            0,							// In space X
+	            0							// In space Y
+	    );
+		gbLayoutPicturesPanel.setConstraints(panMinutiae, gbConstPanel8);
 	}
 	
 	private void onBtBrowsePressed()
