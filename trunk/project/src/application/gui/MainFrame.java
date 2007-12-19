@@ -118,7 +118,10 @@ public class MainFrame extends JFrame
 		pan4Skeleton.setFingerprint(image);
 	}
 	
-	
+	public void setCorePicture(BufferedImage image)
+	{
+		pan5CoreDetection.setFingerprint(image);
+	}	
 
 	//---------------------------------------------------- PRIVATE METHODS --//
 	private void initButtons()

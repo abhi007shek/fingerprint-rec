@@ -56,7 +56,7 @@ public class PanelFingerprint extends JPanel
 		Graphics2D g2d=(Graphics2D) g;
 		
 		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-						     RenderingHints.VALUE_INTERPOLATION_BILINEAR); 
+						     RenderingHints.VALUE_INTERPOLATION_BICUBIC); 
 		if (buffer != null)
 		{
 			g.drawImage(buffer,0,0,getWidth(), getHeight(), this);
