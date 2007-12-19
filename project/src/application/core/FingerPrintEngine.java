@@ -25,12 +25,14 @@
 package application.core;
 
 import java.awt.Color;
-//import java.io.File;
-//import java.io.IOException;
-//
-//import javax.imageio.ImageIO;
+import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
-import application.core.BinaryMatrix.direction;
+import javax.imageio.ImageIO;
+
+import application.core.FingerPrint.direction;
 import application.gui.MainFrame;
 
 public class FingerPrintEngine implements MainFrameListener
@@ -40,7 +42,7 @@ public class FingerPrintEngine implements MainFrameListener
 	//---------------------------------------------------------- VARIABLES --//	
 	private MainFrame mainWindow;
 	private String filename;
-	private BinaryMatrix binaryPicture;
+	private FingerPrint fingerprint;
 	
 	//------------------------------------------------------- CONSTRUCTORS --//	
 
@@ -59,35 +61,47 @@ public class FingerPrintEngine implements MainFrameListener
 	public void startExtraction() 
 	{		
 		// Create binaryPicture
-		binaryPicture = new BinaryMatrix(filename);
+		fingerprint = new FingerPrint(filename);
 		
 		// Print original image
-		mainWindow.setOriginalImage(binaryPicture.getOriginalImage());
+		mainWindow.setOriginalImage(fingerprint.getOriginalImage());
 		
 		// Print binary result
-		binaryPicture.setColors(Color.black, Color.green);
-		mainWindow.setBinaryPicture(binaryPicture.toBufferedImage());
+		fingerprint.setColors(Color.black, Color.green);
+		fingerprint.binarizeMean();
+		mainWindow.setBinaryPicture(fingerprint.toBufferedImage());
+		
+		// Print binary local result
+		fingerprint.setColors(Color.black, Color.green);
+		fingerprint.binarizeLocalMean();
+		mainWindow.setBinaryLocalPicture(fingerprint.toBufferedImage());
 		
 		// Remove noise
-		binaryPicture.addBorders(1);
-		binaryPicture.removeNoise();
-		mainWindow.setSmoothedPicture(binaryPicture.toBufferedImage());
+		fingerprint.addBorders(1);
+		fingerprint.removeNoise();
+		mainWindow.setSmoothedPicture(fingerprint.toBufferedImage());
 		
 		// Skeletonization
-		binaryPicture.skeletonize();
-		mainWindow.setSkeletonPicture(binaryPicture.toBufferedImage());
+		fingerprint.skeletonize();
+		mainWindow.setSkeletonPicture(fingerprint.toBufferedImage());
 		
-		// Core extraction
-		direction [][] dirMatrix = binaryPicture.getDirections();
-		mainWindow.setCorePicture(binaryPicture.directionToBufferedImage(dirMatrix));
+		// Direction
+		direction [][] dirMatrix = fingerprint.getDirections();
+		BufferedImage buffer = fingerprint.directionToBufferedImage(dirMatrix);
+		mainWindow.setDirectionPicture(buffer);
 		
-//		try 
-//		{
-//			ImageIO.write(binaryPicture.toBufferedImage(), "bmp", new File("C:/temp/myImage2.bmp"));
-//		} catch (IOException e) {
-//			// TODO ENLEVER TOUT
-//			e.printStackTrace();
-//		}
+		// Core
+		Point core = fingerprint.getCore(dirMatrix);
+		buffer.getGraphics().fillOval(core.x, core.y, 10, 10);
+		mainWindow.setCorePicture(buffer);
+		
+		try 
+		{
+			ImageIO.write(fingerprint.directionToBufferedImage(dirMatrix), "bmp", new File("C:/temp/myImage2.bmp"));
+		} catch (IOException e) {
+			// TODO ENLEVER TOUT
+			e.printStackTrace();
+		}
 		
 		// TODO
 	}
