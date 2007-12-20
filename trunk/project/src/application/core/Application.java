@@ -25,6 +25,7 @@
 
 package application.core;
 
+import javax.swing.JFrame;
 import javax.swing.UIManager;
 
 import application.gui.MainFrame;
@@ -51,6 +52,9 @@ public class Application
 		// Create objects
 		fingerPrintEngine = new FingerPrintEngine(mainWindow);
 		mainWindow.addMainFrameListener(fingerPrintEngine);	
+		
+		// Set full screen
+		mainWindow.setExtendedState(mainWindow.getExtendedState()|JFrame.MAXIMIZED_BOTH);
 		
 		// Show the window
 		mainWindow.setVisible(true);
