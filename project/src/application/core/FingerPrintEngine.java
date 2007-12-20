@@ -129,6 +129,8 @@ public class FingerPrintEngine implements MainFrameListener
 		
 		// Minutiaes
 		mainWindow.setIsWorking(7, true);
+		buffer = fingerprint.directionToBufferedImage(dirMatrix);
+		mainWindow.setCore(7,core, coreRadius);
 		ArrayList<Point> intersections = fingerprint.getMinutiaeIntersections(core, coreRadius);
 		ArrayList<Point> endPoints = fingerprint.getMinutiaeEndpoints(core, coreRadius);
 		
@@ -140,7 +142,7 @@ public class FingerPrintEngine implements MainFrameListener
 			g.fillOval(point.x-2, point.y-2, 5, 5);
 		}
 		
-		g.setColor(Color.cyan);
+		g.setColor(Color.blue);
 		for (Point point : endPoints)
 		{
 			g.fillOval(point.x-2, point.y-2, 5,5);

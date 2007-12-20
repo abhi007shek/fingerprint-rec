@@ -143,14 +143,15 @@ public class FingerPrint
 			{	
 				currentPoint = new Point(i,j);
 				
-				if (getDistance(currentPoint, core) > coreRadius)
-					break;
-				// Determine if it is a intersection point
-				nbOnNeighbors = getSum(getFourNeigbors(i,j));
-				
-				if ( (binMap[i][j] == true) && ((nbOnNeighbors == 3) || (nbOnNeighbors == 4)))
+				if (getDistance(currentPoint, core) < coreRadius)
 				{
-					minutiae.add(currentPoint);
+					// Determine if it is a intersection point
+					nbOnNeighbors = getSum(getFourNeigbors(i,j));
+					
+					if ( (binMap[i][j] == true) && ((nbOnNeighbors == 3) || (nbOnNeighbors == 4)))
+					{
+						minutiae.add(currentPoint);
+					}
 				}
 			}
 		}
@@ -188,18 +189,18 @@ public class FingerPrint
 			{		
 				currentPoint = new Point(i,j);
 				
-				if (getDistance(currentPoint, core) > coreRadius)
-					break;
-				
-				// Determine if it is a intersection point
-				neighbors = getNeigbors(binMap, i, j);
-				nbOnNeighbors = getSum(neighbors);
-				
-				if ( 	(binMap[i][j] == true) && 
-						(nbOnNeighbors == 1) && 
-						((neighbors[0] == true) || (neighbors[2] == true) || (neighbors[4] == true) || (neighbors[6] == true)))
+				if (getDistance(currentPoint, core) < coreRadius)
 				{
-					minutiae.add(currentPoint);
+					// Determine if it is a intersection point
+					neighbors = getNeigbors(binMap, i, j);
+					nbOnNeighbors = getSum(neighbors);
+					
+					if ( 	(binMap[i][j] == true) && 
+							(nbOnNeighbors == 1) && 
+							((neighbors[0] == true) || (neighbors[2] == true) || (neighbors[4] == true) || (neighbors[6] == true)))
+					{
+						minutiae.add(currentPoint);
+					}
 				}
 			}
 		}
