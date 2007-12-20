@@ -46,6 +46,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import application.core.MainFrameListener;
+import application.gui.legend.PanelLegend;
 import application.gui.panels.PanelPictureViewer;
 import application.gui.picturechooser.PictureChooser;
 
@@ -61,6 +62,9 @@ public class MainFrame extends JFrame
 	
 	// Picture panels	
 	private PanelPictureViewer [] pictureViewers;
+	
+	// Legend
+	private PanelLegend legend;
 	
 	// Buttons
 	private JButton btBrowse;
@@ -171,6 +175,9 @@ public class MainFrame extends JFrame
 		pictureViewers[6] = new PanelPictureViewer("7.Core");
 		pictureViewers[7] = new PanelPictureViewer("8.Minutiae");
 		
+		// Legend
+		legend = new PanelLegend();
+		
 		// Buttons
 		btBrowse = new JButton("...");
 		btExtract = new JButton("Extract !");
@@ -193,6 +200,9 @@ public class MainFrame extends JFrame
 		// Add buttons
 		bkgPanel.add(btBrowse);
 		bkgPanel.add(btExtract);
+		
+		// Add legend
+		bkgPanel.add(legend);
 		
 		bkgPanel.setLayout(new BorderLayout());
 		bkgPanel.setBackground(Color.black);
@@ -233,6 +243,22 @@ public class MainFrame extends JFrame
 	            0							// In space Y
 	    );
 		gbLayoutPicturesPanel.setConstraints(btExtract, gbConstBtExtract);
+		
+		// Panel legend
+		GridBagConstraints gbConstPanelLegend = new GridBagConstraints (	
+				0,							// Column number
+	            2,							// Line number
+	            1,							// Nb occupied lines
+	            2,							// Nb occupied columns
+	            4,							// Relative horizontal space
+	            25,							// Relative vertical space
+	            GridBagConstraints.CENTER,	// Where to place component when resizing
+	            GridBagConstraints.BOTH,	// How to rescale component
+	            new Insets(SPACE, SPACE, SPACE, SPACE), // Spaces (top, left, bottom, right)
+	            0,							// In space X
+	            0							// In space Y
+	    );
+		gbLayoutPicturesPanel.setConstraints(legend, gbConstPanelLegend);
 		
 		// Panel 1 constraints
 		GridBagConstraints gbConstPanel1 = new GridBagConstraints (	
@@ -373,9 +399,8 @@ public class MainFrame extends JFrame
 		{
 			File picFile = pictureChooser.getSelectedFile();
 			fireNewPictureFile(picFile.getAbsolutePath());
+			btExtract.setEnabled(true);
 		}
-		
-		btExtract.setEnabled(true);
 	}
 	
 	private void onBtExtractPressed()

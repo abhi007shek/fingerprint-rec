@@ -71,7 +71,6 @@ public class FingerPrint
 			width = originalImage.getWidth();
 			height = originalImage.getHeight();
 			
-			
 			greyMap = new int [width][height];
 			binMap = new boolean [width][height];
 			
