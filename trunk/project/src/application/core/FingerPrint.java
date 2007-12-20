@@ -113,16 +113,99 @@ public class FingerPrint
 		return height;
 	}
 	
-	public Point[] getMinutiae (Point core, int coreRadius )
+	public ArrayList<Point> getMinutiaeIntersections (Point core, int coreRadius )
 	{
 		ArrayList<Point> minutiae = new ArrayList<Point>();
 		
-		// TODO
+		int minI = core.x - coreRadius;
+		int maxI = core.x + coreRadius;
+		int minJ = core.y - coreRadius;
+		int maxJ = core.y + coreRadius;
 		
+		if (minI < 1)
+			minI = 1;
 		
-		return (Point[])minutiae.toArray();
+		if (maxI > width - 2)
+			maxI = width - 2;
+		
+		if (minJ < 1)
+			minJ = 1;
+		
+		if (maxJ > height - 2)
+			maxJ = height - 2;
+		
+		int nbOnNeighbors;
+		Point currentPoint;
+		
+		for (int i = minI ; i < maxI ; ++i)
+		{
+			for (int j = minJ ; j < maxJ ; ++j)
+			{	
+				currentPoint = new Point(i,j);
+				
+				if (getDistance(currentPoint, core) > coreRadius)
+					break;
+				// Determine if it is a intersection point
+				nbOnNeighbors = getSum(getFourNeigbors(i,j));
+				
+				if ( (binMap[i][j] == true) && ((nbOnNeighbors == 3) || (nbOnNeighbors == 4)))
+				{
+					minutiae.add(currentPoint);
+				}
+			}
+		}
+		
+		return minutiae;
 	}
 	
+	public ArrayList<Point> getMinutiaeEndpoints (Point core, int coreRadius )
+	{
+		ArrayList<Point> minutiae = new ArrayList<Point>();
+		
+		int minI = core.x - coreRadius;
+		int maxI = core.x + coreRadius;
+		int minJ = core.y - coreRadius;
+		int maxJ = core.y + coreRadius;
+		
+		if (minI < 1)
+			minI = 1;
+		
+		if (maxI > width - 2)
+			maxI = width - 2;
+		
+		if (minJ < 1)
+			minJ = 1;
+		
+		if (maxJ > height - 2)
+			maxJ = height - 2;
+		
+		int nbOnNeighbors;
+		boolean [] neighbors;
+		Point currentPoint;
+		for (int i = minI ; i < maxI ; ++i)
+		{
+			for (int j = minJ ; j < maxJ ; ++j)
+			{		
+				currentPoint = new Point(i,j);
+				
+				if (getDistance(currentPoint, core) > coreRadius)
+					break;
+				
+				// Determine if it is a intersection point
+				neighbors = getNeigbors(binMap, i, j);
+				nbOnNeighbors = getSum(neighbors);
+				
+				if ( 	(binMap[i][j] == true) && 
+						(nbOnNeighbors == 1) && 
+						((neighbors[0] == true) || (neighbors[2] == true) || (neighbors[4] == true) || (neighbors[6] == true)))
+				{
+					minutiae.add(currentPoint);
+				}
+			}
+		}
+		
+		return minutiae;
+	}
 	
 	public BufferedImage toBufferedImage()
 	{
@@ -638,6 +721,17 @@ public class FingerPrint
 
 	//---------------------------------------------------- PRIVATE METHODS --//
 	
+	private boolean [] getFourNeigbors(int i, int j)
+	{
+		boolean []neighbors = new boolean [4];
+		neighbors[0] = binMap[i+0][j-1];
+		neighbors[1] = binMap[i+1][j+0];
+		neighbors[2] = binMap[i+0][j+1];
+		neighbors[3] = binMap[i-1][j+0];
+			
+		return neighbors;
+	}
+	
 	private int getGreylevelMean( int [][] greymap, int w, int h)
 	{
 		int total = 0;
@@ -682,6 +776,14 @@ public class FingerPrint
 		neigbors[7] = mat[i-1][j-1];
 	
 		return neigbors;
+	}
+	
+	private float getDistance(Point a, Point b)
+	{
+		int deltaX = b.x - a.x;
+		int deltaY = b.y - a.y;
+		
+		return (float)Math.sqrt(Math.abs(deltaX*deltaX)+Math.abs(deltaY*deltaY));
 	}
 	
 	private int getTransitions (boolean [] neighbors)

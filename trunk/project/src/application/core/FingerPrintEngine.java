@@ -25,12 +25,10 @@
 package application.core;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-//import java.io.File;
-//import java.io.IOException;
-//
-//import javax.imageio.ImageIO;
+import java.util.ArrayList;
 
 import application.core.FingerPrint.direction;
 import application.gui.MainFrame;
@@ -131,8 +129,26 @@ public class FingerPrintEngine implements MainFrameListener
 		
 		// Minutiaes
 		mainWindow.setIsWorking(7, true);
-		Point [] minutiaeMatrix = fingerprint.getMinutiae(core, coreRadius);
-		// TODO
+		ArrayList<Point> intersections = fingerprint.getMinutiaeIntersections(core, coreRadius);
+		ArrayList<Point> endPoints = fingerprint.getMinutiaeEndpoints(core, coreRadius);
+		
+		// Add intersections
+		Graphics g = buffer.getGraphics();
+		g.setColor(Color.magenta);
+		for (Point point : intersections)
+		{
+			g.fillOval(point.x-2, point.y-2, 5, 5);
+		}
+		
+		g.setColor(Color.cyan);
+		for (Point point : endPoints)
+		{
+			g.fillOval(point.x-2, point.y-2, 5,5);
+		}
+		
+		// Add to buffer
+		mainWindow.setImage(7,buffer);
+		
 		mainWindow.setIsWorking(7, false);		
 //		try 
 //		{
