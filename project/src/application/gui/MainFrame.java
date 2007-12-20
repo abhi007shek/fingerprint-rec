@@ -31,6 +31,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -58,15 +59,8 @@ public class MainFrame extends JFrame
 	// Main panel
 	private JPanel bkgPanel;
 	
-	// Picture panels
-	private PanelPictureViewer panOriginal;
-	private PanelPictureViewer panBinaryPicture;
-	private PanelPictureViewer panBinaryLocalPicture;
-	private PanelPictureViewer panNoiseRemoval;
-	private PanelPictureViewer panSkeleton;
-	private PanelPictureViewer panDirection;
-	private PanelPictureViewer panCore;
-	private PanelPictureViewer panMinutiae;
+	// Picture panels	
+	private PanelPictureViewer [] pictureViewers;
 	
 	// Buttons
 	private JButton btBrowse;
@@ -95,45 +89,35 @@ public class MainFrame extends JFrame
 	}
 
 	//------------------------------------------------------------ METHODS --//	
+	public void init()
+	{
+		for (int i = 0 ; i < pictureViewers.length ; ++i)
+		{
+			pictureViewers[i].init();
+		}
+	}
+	
+	public void setImage (int i, BufferedImage image)
+	{
+		pictureViewers[i].setFingerprint(image);
+	}
+
+	
 	public void addMainFrameListener(MainFrameListener listener) 
 	{
         listeners.add(listener);
     }
 	
-	public void setOriginalImage(BufferedImage image)
+	public void setCorePicture(int i, Point core)
 	{
-		panOriginal.setFingerprint(image);
-	}
-	
-	public void setBinaryLocalPicture(BufferedImage image)
-	{
-		panBinaryLocalPicture.setFingerprint(image);
-	}
-
-	public void setBinaryPicture(BufferedImage image)
-	{
-		panBinaryPicture.setFingerprint(image);
-	}
-
-	public void setSmoothedPicture(BufferedImage image)
-	{
-		panNoiseRemoval.setFingerprint(image);
-	}
-
-	public void setSkeletonPicture(BufferedImage image)
-	{
-		panSkeleton.setFingerprint(image);
-	}
-	
-	public void setDirectionPicture(BufferedImage image)
-	{
-		panDirection.setFingerprint(image);
+		pictureViewers[i].setCore(core);
 	}	
 	
-	public void setCorePicture(BufferedImage image)
+	public void setEnableButtons (boolean enabled)
 	{
-		panCore.setFingerprint(image);
-	}	
+		btBrowse.setEnabled(enabled);
+		btExtract.setEnabled(enabled);
+	}
 
 	//---------------------------------------------------- PRIVATE METHODS --//
 	private void initButtons()
@@ -153,7 +137,7 @@ public class MainFrame extends JFrame
 	
 	private void initFrame()
 	{
-		setSize(800, 600);
+		setSize(1024, 600);
 		setTitle("Fingerprint pattern extractor");
 
 		// Icon
@@ -171,14 +155,16 @@ public class MainFrame extends JFrame
 		bkgPanel = new JPanel();
 		
 		// Picture panels
-		panOriginal = new PanelPictureViewer("1.Original");
-		panBinaryPicture = new PanelPictureViewer("2.Binary (mean)");
-		panBinaryLocalPicture = new PanelPictureViewer("3.Binary (local)");
-		panNoiseRemoval = new PanelPictureViewer("4.Smoothed");
-		panSkeleton = new PanelPictureViewer("5.Skeleton");
-		panDirection = new PanelPictureViewer("6.Direction");
-		panCore = new PanelPictureViewer("7.Core");
-		panMinutiae = new PanelPictureViewer("8.Minutiae");
+		pictureViewers = new PanelPictureViewer[8];
+		
+		pictureViewers[0] = new PanelPictureViewer("1.Original");
+		pictureViewers[1] = new PanelPictureViewer("2.Binary (mean)");
+		pictureViewers[2] = new PanelPictureViewer("3.Binary (local)");
+		pictureViewers[3] = new PanelPictureViewer("4.Smoothed");
+		pictureViewers[4] = new PanelPictureViewer("5.Skeleton");
+		pictureViewers[5] = new PanelPictureViewer("6.Direction");
+		pictureViewers[6] = new PanelPictureViewer("7.Core");
+		pictureViewers[7] = new PanelPictureViewer("8.Minutiae");
 		
 		// Buttons
 		btBrowse = new JButton("...");
@@ -193,15 +179,11 @@ public class MainFrame extends JFrame
 	
 	private void setLayouts()
 	{
-		// Add panels to the main panel		
-		bkgPanel.add(panOriginal);
-		bkgPanel.add(panBinaryPicture);
-		bkgPanel.add(panBinaryLocalPicture);
-		bkgPanel.add(panNoiseRemoval);
-		bkgPanel.add(panSkeleton);
-		bkgPanel.add(panDirection);
-		bkgPanel.add(panCore);
-		bkgPanel.add(panMinutiae);
+		// Add panels to the main panel	
+		for (int i = 0 ; i < pictureViewers.length ; ++i)
+		{
+			bkgPanel.add(pictureViewers[i]);
+		}
 		
 		// Add buttons
 		bkgPanel.add(btBrowse);
@@ -261,7 +243,7 @@ public class MainFrame extends JFrame
 	            0,							// In space X
 	            0							// In space Y
 	    );
-		gbLayoutPicturesPanel.setConstraints(panOriginal, gbConstPanel1);
+		gbLayoutPicturesPanel.setConstraints(pictureViewers[0], gbConstPanel1);
 
 		// Panel 2 constraints
 		GridBagConstraints gbConstPanel2 = new GridBagConstraints (	
@@ -277,7 +259,7 @@ public class MainFrame extends JFrame
 	            0,							// In space X
 	            0							// In space Y
 	    );
-		gbLayoutPicturesPanel.setConstraints(panBinaryPicture, gbConstPanel2);
+		gbLayoutPicturesPanel.setConstraints(pictureViewers[1], gbConstPanel2);
 		
 		// Panel 3 constraints
 		GridBagConstraints gbConstPanel3 = new GridBagConstraints (	
@@ -293,7 +275,7 @@ public class MainFrame extends JFrame
 	            0,							// In space X
 	            0							// In space Y
 	    );
-		gbLayoutPicturesPanel.setConstraints(panBinaryLocalPicture, gbConstPanel3);
+		gbLayoutPicturesPanel.setConstraints(pictureViewers[2], gbConstPanel3);
 		
 		// Panel 4 constraints
 		GridBagConstraints gbConstPanel4 = new GridBagConstraints (	
@@ -309,7 +291,7 @@ public class MainFrame extends JFrame
 	            0,							// In space X
 	            0							// In space Y
 	    );
-		gbLayoutPicturesPanel.setConstraints(panNoiseRemoval, gbConstPanel4);
+		gbLayoutPicturesPanel.setConstraints(pictureViewers[3], gbConstPanel4);
 		
 		// Panel 5 constraints
 		GridBagConstraints gbConstPanel5 = new GridBagConstraints (	
@@ -325,7 +307,7 @@ public class MainFrame extends JFrame
 	            0,							// In space X
 	            0							// In space Y
 	    );
-		gbLayoutPicturesPanel.setConstraints(panSkeleton, gbConstPanel5);
+		gbLayoutPicturesPanel.setConstraints(pictureViewers[4], gbConstPanel5);
 		
 		// Panel 6 constraints
 		GridBagConstraints gbConstPanel6 = new GridBagConstraints (	
@@ -341,7 +323,7 @@ public class MainFrame extends JFrame
 	            0,							// In space X
 	            0							// In space Y
 	    );
-		gbLayoutPicturesPanel.setConstraints(panDirection, gbConstPanel6);
+		gbLayoutPicturesPanel.setConstraints(pictureViewers[5], gbConstPanel6);
 		
 		// Panel 7 constraints
 		GridBagConstraints gbConstPanel7 = new GridBagConstraints (	
@@ -357,7 +339,7 @@ public class MainFrame extends JFrame
 	            0,							// In space X
 	            0							// In space Y
 	    );
-		gbLayoutPicturesPanel.setConstraints(panCore, gbConstPanel7);
+		gbLayoutPicturesPanel.setConstraints(pictureViewers[6], gbConstPanel7);
 		
 		// Panel 8 constraints
 		GridBagConstraints gbConstPanel8 = new GridBagConstraints (	
@@ -373,7 +355,7 @@ public class MainFrame extends JFrame
 	            0,							// In space X
 	            0							// In space Y
 	    );
-		gbLayoutPicturesPanel.setConstraints(panMinutiae, gbConstPanel8);
+		gbLayoutPicturesPanel.setConstraints(pictureViewers[7], gbConstPanel8);
 	}
 	
 	private void onBtBrowsePressed()

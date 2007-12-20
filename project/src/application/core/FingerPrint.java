@@ -30,6 +30,7 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.Math;
 
 import javax.imageio.ImageIO;
 
@@ -203,39 +204,6 @@ public class FingerPrint
 				
 			}
 		}
-		
-		
-		
-//		for (int i = minI ; i < maxI ; ++i)
-//		{
-//			for (int j = minJ ; j < maxJ ; ++j)
-//			{				
-//				indexCur = 0;
-//				
-//				// Check the number of pixel in each direction
-//				for (int ik = i-windowSize ; ik < i+windowSize ; ++ik)
-//				{
-//					for (int jk = j-windowSize ; jk < j+windowSize ; ++jk)
-//					{
-//						if (dirMatrix[ik][jk] == direction.HORIZONTAL)
-//							indexCur += 8;
-//						if (dirMatrix[ik][jk] == direction.VERTICAL)
-//							indexCur += 2;
-//						else if	((dirMatrix[ik][jk] == direction.POSITIVE) ||
-//								(dirMatrix[ik][jk] == direction.NEGATIVE))
-//							indexCur += 1;
-//					}
-//				}
-//				
-//				// Check if the new point is better
-//				if (indexCur >= indexMax)
-//				{
-//					indexMax = indexCur;
-//					core.x = i;
-//					core.y = j;
-//				}
-//			}
-//		}
 	}
 	
 	public BufferedImage getOriginalImage() 
@@ -449,23 +417,187 @@ public class FingerPrint
 	
 	public Point getCore (direction [][] dirMatrix)
 	{
-		Point core = new Point();
+		// Private class to store partial results
+		class coreInfos
+		{
+			private int nbVer, nbHor, nbPos, nbNeg;
+			
+			public float getIndex()
+			{				
+				float perVer, perHor, perPos, perNeg;
+				float total = nbVer + nbHor + nbPos + nbNeg;
+				float res;
+				
+				if (total == 0)
+					return 1;
+				
+				perVer = nbVer / total;
+				perHor = nbHor / total;
+				perPos = nbPos / total;
+				perNeg = nbNeg / total;
+				
+				res = 	  Math.abs(perVer - .25f)
+						+ Math.abs(perHor - .25f)
+						+ Math.abs(perPos - .25f)
+						+ Math.abs(perNeg - .25f);
+				
+				return res;
+			}
+			
+			public void reset()
+			{
+				nbVer = 0;
+				nbHor = 0;
+				nbPos = 0;
+				nbNeg = 0;				
+			}
+			
+			public void copyFrom(coreInfos r)
+			{
+				nbVer = r.nbVer;
+				nbHor = r.nbHor;
+				nbPos = r.nbPos;
+				nbNeg = r.nbNeg;					
+			}
+			
+			public void incVertical  (){++nbVer;}
+			public void incHorizontal(){++nbHor;}
+			public void incPositive  (){++nbPos;}
+			public void incNegative  (){++nbNeg;}
+		}
 		
-		int windowSize = 10;
+		// Variables
+		Point core = new Point();
+		int windowSize = width / 8;
 		
 		int minI = windowSize;
 		int maxI = width - windowSize;
 		int minJ = windowSize;
 		int maxJ = height - windowSize;
 		
-		int indexMax = 0;
-		int indexCur = 0;
+		int minIK, maxIK, minJK, maxJK;
+		
+		coreInfos bestCandidate = new coreInfos();
+		coreInfos currentCandidate = new coreInfos();
+		
+		bestCandidate.reset();
 		
 		for (int i = minI ; i < maxI ; ++i)
 		{
 			for (int j = minJ ; j < maxJ ; ++j)
+			{	
+				// Reset current infos
+				currentCandidate.reset();
+				
+				minIK = i - windowSize;
+				maxIK = i + windowSize;
+				minJK = j - windowSize;
+				maxJK = j + windowSize;
+				
+				// Calculate direction proportions
+				for (int ik = minIK ; ik < maxIK ; ++ik)
+				{					
+					for (int jk = minJK ; jk < maxJK; ++jk)
+					{
+						// Increment the good value 
+						switch (dirMatrix[ik][jk]) 
+						{								
+							case HORIZONTAL:
+								currentCandidate.incHorizontal();
+								break;
+								
+							case POSITIVE:
+								currentCandidate.incPositive();
+								break;
+								
+							case NEGATIVE:
+								currentCandidate.incNegative();
+								break;
+								
+							case VERTICAL:
+								currentCandidate.incVertical();
+								break;
+						}
+					}
+				}
+				
+				// Check if we keep the core
+				if (currentCandidate.getIndex() <= bestCandidate.getIndex())
+				{
+					bestCandidate.copyFrom(currentCandidate);
+					core.x = i;
+					core.y = j;
+				}
+			}
+		}
+		return core;
+	}
+	
+	public Point getCore2 (direction [][] dirMatrix)
+	{
+		Point core = new Point();
+		
+		int windowSize = 5;
+		
+		int minI = windowSize;
+		int maxI = width - windowSize;
+		int minJ = windowSize;
+		int maxJ = height - windowSize;
+		
+		class tempResult
+		{
+			public int nbHorizontal;
+			public int nbVertical;
+			
+			public void reset()
+			{
+				nbHorizontal = 0;
+				nbVertical = 0;
+			}
+			
+			public void copy(tempResult r)
+			{
+				this.nbHorizontal = r.nbHorizontal;
+				this.nbVertical = r.nbVertical;
+			}
+			
+			public boolean isBetter(tempResult r)
+			{
+				if ((r.nbHorizontal + r.nbVertical) >= (nbHorizontal + nbVertical))
+				{
+					if ((nbHorizontal == 0) && (r.nbHorizontal != 0))
+						return true;
+					
+					if ((nbVertical == 0) && (r.nbVertical != 0))
+						return true;
+					
+//					if (java.lang.Math.abs(r.nbHorizontal - r.nbVertical) <= java.lang.Math.abs(nbHorizontal - nbVertical))
+//						return true;
+				}
+				
+				return false;
+			}
+			
+			public void incH()
+			{
+				nbHorizontal++;
+			}
+			
+			public void incV()
+			{
+				nbVertical++;
+			}
+		};
+		
+		tempResult bestResult = new tempResult();
+		tempResult currentResult = new tempResult();
+		
+
+		for (int i = minI ; i < maxI ; ++i)
+		{
+			for (int j = minJ ; j < maxJ ; ++j)
 			{				
-				indexCur = 0;
+				currentResult.reset();
 				
 				// Check the number of pixel in each direction
 				for (int ik = i-windowSize ; ik < i+windowSize ; ++ik)
@@ -473,19 +605,16 @@ public class FingerPrint
 					for (int jk = j-windowSize ; jk < j+windowSize ; ++jk)
 					{
 						if (dirMatrix[ik][jk] == direction.HORIZONTAL)
-							indexCur += 8;
+							currentResult.incH();
 						if (dirMatrix[ik][jk] == direction.VERTICAL)
-							indexCur += 2;
-						else if	((dirMatrix[ik][jk] == direction.POSITIVE) ||
-								(dirMatrix[ik][jk] == direction.NEGATIVE))
-							indexCur += 1;
+							currentResult.incV();
 					}
 				}
 				
 				// Check if the new point is better
-				if (indexCur >= indexMax)
+				if (bestResult.isBetter(currentResult))
 				{
-					indexMax = indexCur;
+					bestResult.copy(currentResult);
 					core.x = i;
 					core.y = j;
 				}

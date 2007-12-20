@@ -31,6 +31,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
@@ -107,9 +108,19 @@ public class PanelPictureViewer extends JPanel
 	}
 
 	//------------------------------------------------------------ METHODS --//	
+	public void init()
+	{
+		picturePanel.init();
+	}
+	
 	public void setFingerprint(BufferedImage buffer)
 	{
 		picturePanel.setBufferedImage(buffer);
+	}
+	
+	public void setCore(Point core)
+	{
+		picturePanel.setCore(core);
 	}
 
 	//---------------------------------------------------- PRIVATE METHODS --//

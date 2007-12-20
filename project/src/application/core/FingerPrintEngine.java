@@ -38,78 +38,102 @@ import application.gui.MainFrame;
 public class FingerPrintEngine implements MainFrameListener
 {
 	//---------------------------------------------------------- CONSTANTS --//
-
+	private class computeThread extends Thread
+	{
+		public void run()
+		{
+			compute();
+		}
+	}
+	
 	//---------------------------------------------------------- VARIABLES --//	
 	private MainFrame mainWindow;
 	private String filename;
 	private FingerPrint fingerprint;
+	private computeThread thread;
 	
 	//------------------------------------------------------- CONSTRUCTORS --//	
-
+	
 	//------------------------------------------------------------ METHODS --//	
 	
 	public FingerPrintEngine(MainFrame mainWindow) 
 	{
 		this.mainWindow = mainWindow;
+		thread = new computeThread();
 	}
 	
 	
 	//---------------------------------------------------- PRIVATE METHODS --//
 
-	
-	@Override
-	public void startExtraction() 
-	{		
+	private void compute()
+	{
+		// Disable buttons
+		mainWindow.setEnableButtons(false);
+		
 		// Create binaryPicture
 		fingerprint = new FingerPrint(filename);
 		
 		// Print original image
-		mainWindow.setOriginalImage(fingerprint.getOriginalImage());
+		mainWindow.setImage(0, fingerprint.getOriginalImage());
 		
 		// Print binary result
 		fingerprint.setColors(Color.black, Color.green);
 		fingerprint.binarizeMean();
-		mainWindow.setBinaryPicture(fingerprint.toBufferedImage());
+		mainWindow.setImage(1, fingerprint.toBufferedImage());
 		
 		// Print binary local result
 		fingerprint.setColors(Color.black, Color.green);
 		fingerprint.binarizeLocalMean();
-		mainWindow.setBinaryLocalPicture(fingerprint.toBufferedImage());
+		mainWindow.setImage(2,fingerprint.toBufferedImage());
 		
 		// Remove noise
 		fingerprint.addBorders(1);
 		fingerprint.removeNoise();
-		mainWindow.setSmoothedPicture(fingerprint.toBufferedImage());
+		fingerprint.removeNoise();
+		fingerprint.removeNoise();
+		mainWindow.setImage(3,fingerprint.toBufferedImage());
 		
 		// Skeletonization
 		fingerprint.skeletonize();
-		mainWindow.setSkeletonPicture(fingerprint.toBufferedImage());
+		mainWindow.setImage(4,fingerprint.toBufferedImage());
 		
 		// Direction
 		direction [][] dirMatrix = fingerprint.getDirections();
 		BufferedImage buffer = fingerprint.directionToBufferedImage(dirMatrix);
-		mainWindow.setDirectionPicture(buffer);
+		mainWindow.setImage(5,buffer);
 		
 		// Core
 		Point core = fingerprint.getCore(dirMatrix);
-		buffer.getGraphics().fillOval(core.x, core.y, 10, 10);
-		mainWindow.setCorePicture(buffer);
+		mainWindow.setImage(6,buffer);
+		mainWindow.setCorePicture(6,core);
 		
 		try 
 		{
 			ImageIO.write(fingerprint.directionToBufferedImage(dirMatrix), "bmp", new File("C:/temp/myImage2.bmp"));
-		} catch (IOException e) {
+		} 
+		catch (IOException e) 
+		{
 			// TODO ENLEVER TOUT
 			e.printStackTrace();
 		}
 		
-		// TODO
+		// Enable buttons
+		mainWindow.setEnableButtons(true);
+		
+	}
+	
+	@Override
+	public void startExtraction() 
+	{	
+		thread = new computeThread();
+		thread.start();
 	}
 	
 	@Override
 	public void newPictureFile(String filename) 
 	{
 		this.filename = filename;
+		mainWindow.init();
 	}
 
 }
