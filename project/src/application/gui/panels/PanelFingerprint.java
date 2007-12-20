@@ -109,8 +109,6 @@ public class PanelFingerprint extends JPanel
 
 		if (core != null)
 		{
-//			buffer.getGraphics().setColor(Color.white);
-//			buffer.getGraphics().drawRect(core.x, core.y, 10, 10);
 			buffer.getGraphics().drawImage(	coreIcon,
 											core.x-16,
 											core.y-16,
@@ -125,8 +123,6 @@ public class PanelFingerprint extends JPanel
 		if (buffer != null)
 		{
 			g.drawImage(buffer,0,0,getWidth(), getHeight(), this);
-		}
-		
-
+		}		
 	}
 }
