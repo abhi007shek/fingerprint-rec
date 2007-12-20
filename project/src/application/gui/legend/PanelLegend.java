@@ -37,7 +37,7 @@ import javax.swing.SwingConstants;
 public class PanelLegend extends JPanel
 {
 	//---------------------------------------------------------- CONSTANTS --//
-	private int SPACE = 6; 
+	private int SPACE = 4; 
 	//---------------------------------------------------------- VARIABLES --//	
 	private JLabel textDir;
 	private JLabel textMinutiae;
@@ -54,17 +54,17 @@ public class PanelLegend extends JPanel
 	public PanelLegend() 
 	{
 		// Create objects
-		textDir = new JLabel("- Ridge dir.:");
-		textMinutiae = new JLabel("- Minutiae:");
+		textDir = new JLabel("Ridge direction");
+		textMinutiae = new JLabel("Minutiae");
 		Font titleFont = new Font("Arial",Font.BOLD,15);
 		
-		colDirPos = new LabelledColor (Color.green,  " Positive   (/)");
-		colDirNeg = new LabelledColor (Color.yellow, " Negative   (\\)");
-		colDirVer = new LabelledColor (Color.cyan,   " Vertical   (|)");
-		colDirHor = new LabelledColor (Color.red,    " Horizontal (-)");
+		colDirPos = new LabelledColor (Color.green,  " Pos. (/)");
+		colDirNeg = new LabelledColor (Color.yellow, " Neg. (\\)");
+		colDirVer = new LabelledColor (Color.cyan,   " Ver. (|)");
+		colDirHor = new LabelledColor (Color.red,    " Hor. (-)");
 
-		colMinEnd = new LabelledColor (Color.blue, 	 " End points");
-		colMinInt = new LabelledColor (Color.magenta," Intersections");
+		colMinEnd = new LabelledColor (Color.blue, 	 " Endpoints");
+		colMinInt = new LabelledColor (Color.magenta," Intersect.");
 		
 		// Options
 		setBackground(Color.black);
@@ -78,6 +78,8 @@ public class PanelLegend extends JPanel
 		textMinutiae.setForeground(Color.gray);
 		textDir.setPreferredSize(new Dimension(1,1));	
 		textMinutiae.setPreferredSize(new Dimension(1,1));
+		
+		setPreferredSize(new Dimension(1,1));
 		
 		//setBackground(new Color (100,100,100));
 		

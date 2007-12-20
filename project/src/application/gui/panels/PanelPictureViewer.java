@@ -60,7 +60,10 @@ public class PanelPictureViewer extends JPanel
 		titlePanel.setBackground(new Color(100,100,100));
 		titlePanel.setAlignmentX(JTextField.CENTER_ALIGNMENT);
 		titlePanel.setAlignmentY(JTextField.CENTER_ALIGNMENT);
-		titlePanel.setFont(new Font("Arial",0,15));
+		titlePanel.setFont(new Font("Arial",Font.BOLD,15));
+		titlePanel.setForeground(Color.darkGray);
+		titlePanel.setEditable(false);
+		titlePanel.setFocusable(false);
 		
 		picturePanel.setBackground(new Color(100,100,100));
 		

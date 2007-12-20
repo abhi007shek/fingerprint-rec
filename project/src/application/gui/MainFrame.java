@@ -218,7 +218,7 @@ public class MainFrame extends JFrame
 	            0,							// Line number
 	            1,							// Nb occupied lines
 	            1,							// Nb occupied columns
-	            4,						    // Relative horizontal space
+	            10,						    // Relative horizontal space
 	            25,							// Relative vertical space
 	            GridBagConstraints.CENTER,	// Where to place component when resizing
 	            GridBagConstraints.BOTH,	// How to rescale component
@@ -234,7 +234,7 @@ public class MainFrame extends JFrame
 	            1,							// Line number
 	            1,							// Nb occupied lines
 	            1,							// Nb occupied columns
-	            4,						    // Relative horizontal space
+	            10,						    // Relative horizontal space
 	            25,							// Relative vertical space
 	            GridBagConstraints.CENTER,	// Where to place component when resizing
 	            GridBagConstraints.BOTH,	// How to rescale component
@@ -250,7 +250,7 @@ public class MainFrame extends JFrame
 	            2,							// Line number
 	            1,							// Nb occupied lines
 	            2,							// Nb occupied columns
-	            4,							// Relative horizontal space
+	            10,							// Relative horizontal space
 	            25,							// Relative vertical space
 	            GridBagConstraints.CENTER,	// Where to place component when resizing
 	            GridBagConstraints.BOTH,	// How to rescale component
