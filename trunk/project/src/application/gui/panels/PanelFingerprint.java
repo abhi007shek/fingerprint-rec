@@ -25,9 +25,13 @@
 
 package application.gui.panels;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
@@ -38,15 +42,43 @@ public class PanelFingerprint extends JPanel
 
 	//---------------------------------------------------------- VARIABLES --//	
 	BufferedImage buffer;
+	Point core;
+	boolean isWorking;
+	Image loadingIcon;
 	
 	//------------------------------------------------------- CONSTRUCTORS --//	
-
+	public PanelFingerprint() 
+	{
+		isWorking = false;
+	}
 	//------------------------------------------------------------ METHODS --//	
 	public void setBufferedImage (BufferedImage buffer)
 	{
 		this.buffer = buffer;
 		repaint();
 	}
+	
+	public void setCore (Point core)
+	{
+		this.core = core;
+		repaint();
+	}
+	
+	public void setIsWorking(boolean isWorking)
+	{
+		isWorking = true;
+		repaint();
+		
+		loadingIcon = Toolkit.getDefaultToolkit().getImage("./ressources/loading.gif");
+	}
+	
+	public void init()
+	{
+		core = null;
+		buffer = null;
+		repaint();
+	}
+	
 	//---------------------------------------------------- PRIVATE METHODS --//
 	@Override
 	protected void paintComponent(Graphics g) 
@@ -55,8 +87,26 @@ public class PanelFingerprint extends JPanel
 		
 		Graphics2D g2d=(Graphics2D) g;
 		
+		if (isWorking)
+		{
+			g2d.drawImage(	loadingIcon,
+							(getWidth()/2) - 16,
+							(getHeight()/2) - 16,
+							(getWidth()/2) + 16,
+							(getHeight()/2) + 16,
+							this);
+			return;
+		}
+		
 		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
 						     RenderingHints.VALUE_INTERPOLATION_BICUBIC); 
+		
+		if (core != null)
+		{
+			buffer.getGraphics().setColor(Color.white);
+			buffer.getGraphics().drawRect(core.x, core.y, 10, 10);
+		}
+		
 		if (buffer != null)
 		{
 			g.drawImage(buffer,0,0,getWidth(), getHeight(), this);
