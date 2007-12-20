@@ -25,6 +25,7 @@
 
 package application.gui.panels;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -45,6 +46,7 @@ public class PanelFingerprint extends JPanel
 	boolean isWorking;
 	Image loadingIcon;
 	Image coreIcon;
+	int coreRadius;
 	
 	//------------------------------------------------------- CONSTRUCTORS --//	
 	public PanelFingerprint() 
@@ -60,9 +62,10 @@ public class PanelFingerprint extends JPanel
 		repaint();
 	}
 	
-	public void setCore (Point core)
+	public void setCore (Point core, int coreRadius)
 	{
 		this.core = core;
+		this.coreRadius = coreRadius;
 		repaint();
 	}
 	
@@ -114,6 +117,9 @@ public class PanelFingerprint extends JPanel
 											32,
 											32,
 											this);
+			
+			buffer.getGraphics().setColor(Color.white);
+			buffer.getGraphics().drawOval(core.x-coreRadius, core.y-coreRadius, 2*coreRadius, 2*coreRadius);
 		}
 		
 		if (buffer != null)

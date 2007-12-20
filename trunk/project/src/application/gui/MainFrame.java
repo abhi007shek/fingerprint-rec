@@ -113,9 +113,9 @@ public class MainFrame extends JFrame
         listeners.add(listener);
     }
 	
-	public void setCorePicture(int i, Point core)
+	public void setCore(int i, Point core, int coreRadius)
 	{
-		pictureViewers[i].setCore(core);
+		pictureViewers[i].setCore(core,coreRadius);
 	}	
 	
 	public void setEnableButtons (boolean enabled)

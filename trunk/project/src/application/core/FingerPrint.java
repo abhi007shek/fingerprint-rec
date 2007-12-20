@@ -31,6 +31,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.Math;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -111,6 +112,17 @@ public class FingerPrint
 	{
 		return height;
 	}
+	
+	public Point[] getMinutiae (Point core, int coreRadius )
+	{
+		ArrayList<Point> minutiae = new ArrayList<Point>();
+		
+		// TODO
+		
+		
+		return (Point[])minutiae.toArray();
+	}
+	
 	
 	public BufferedImage toBufferedImage()
 	{

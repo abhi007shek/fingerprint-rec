@@ -27,10 +27,10 @@ package application.core;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
+//import java.io.File;
+//import java.io.IOException;
+//
+//import javax.imageio.ImageIO;
 
 import application.core.FingerPrint.direction;
 import application.gui.MainFrame;
@@ -124,21 +124,27 @@ public class FingerPrintEngine implements MainFrameListener
 		mainWindow.setIsWorking(6, true);
 		buffer = fingerprint.directionToBufferedImage(dirMatrix);
 		Point core = fingerprint.getCore(dirMatrix);
-		mainWindow.setIsWorking(6, false);
 		mainWindow.setImage(6,buffer);
-		mainWindow.setCorePicture(6,core);
+		int coreRadius = buffer.getWidth() / 3;
+		mainWindow.setIsWorking(6, false);
+		mainWindow.setCore(6,core, coreRadius);
 		
-		try 
-		{
-			ImageIO.write(fingerprint.directionToBufferedImage(dirMatrix), "bmp", new File("C:/temp/myImage2.bmp"));
-		} 
-		catch (IOException e) 
-		{
-			// TODO ENLEVER TOUT
-			e.printStackTrace();
-		}
-		
-		// Enable buttons
+		// Minutiaes
+		mainWindow.setIsWorking(7, true);
+		Point [] minutiaeMatrix = fingerprint.getMinutiae(core, coreRadius);
+		// TODO
+		mainWindow.setIsWorking(7, false);		
+//		try 
+//		{
+//			ImageIO.write(fingerprint.directionToBufferedImage(dirMatrix), "bmp", new File("C:/temp/myImage2.bmp"));
+//		} 
+//		catch (IOException e) 
+//		{
+//			// TODO ENLEVER TOUT
+//			e.printStackTrace();
+//		}
+//		
+//		// Enable buttons
 		mainWindow.setEnableButtons(true);
 		
 	}
