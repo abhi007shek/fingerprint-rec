@@ -25,7 +25,6 @@
 
 package application.gui.panels;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -45,11 +44,14 @@ public class PanelFingerprint extends JPanel
 	Point core;
 	boolean isWorking;
 	Image loadingIcon;
+	Image coreIcon;
 	
 	//------------------------------------------------------- CONSTRUCTORS --//	
 	public PanelFingerprint() 
 	{
 		isWorking = false;
+		loadingIcon = Toolkit.getDefaultToolkit().getImage("./ressources/loading.gif");
+		coreIcon = Toolkit.getDefaultToolkit().getImage("./ressources/core.png");
 	}
 	//------------------------------------------------------------ METHODS --//	
 	public void setBufferedImage (BufferedImage buffer)
@@ -66,10 +68,8 @@ public class PanelFingerprint extends JPanel
 	
 	public void setIsWorking(boolean isWorking)
 	{
-		isWorking = true;
+		this.isWorking = isWorking;
 		repaint();
-		
-		loadingIcon = Toolkit.getDefaultToolkit().getImage("./ressources/loading.gif");
 	}
 	
 	public void init()
@@ -89,27 +89,38 @@ public class PanelFingerprint extends JPanel
 		
 		if (isWorking)
 		{
+			g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+							     RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+			
 			g2d.drawImage(	loadingIcon,
-							(getWidth()/2) - 16,
-							(getHeight()/2) - 16,
-							(getWidth()/2) + 16,
-							(getHeight()/2) + 16,
+							Math.round(getWidth()*.5f) - 16,
+							Math.round(getHeight()*.5f) - 16,
+							32,
+							32,
 							this);
 			return;
 		}
 		
 		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-						     RenderingHints.VALUE_INTERPOLATION_BICUBIC); 
-		
+			     RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+
 		if (core != null)
 		{
-			buffer.getGraphics().setColor(Color.white);
-			buffer.getGraphics().drawRect(core.x, core.y, 10, 10);
+//			buffer.getGraphics().setColor(Color.white);
+//			buffer.getGraphics().drawRect(core.x, core.y, 10, 10);
+			buffer.getGraphics().drawImage(	coreIcon,
+											core.x-16,
+											core.y-16,
+											32,
+											32,
+											this);
 		}
 		
 		if (buffer != null)
 		{
 			g.drawImage(buffer,0,0,getWidth(), getHeight(), this);
 		}
+		
+
 	}
 }

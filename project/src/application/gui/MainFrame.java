@@ -101,6 +101,11 @@ public class MainFrame extends JFrame
 	{
 		pictureViewers[i].setFingerprint(image);
 	}
+	
+	public void setIsWorking (int i, boolean isWorking)
+	{
+		pictureViewers[i].setIsWorking(isWorking);
+	}
 
 	
 	public void addMainFrameListener(MainFrameListener listener) 

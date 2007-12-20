@@ -122,6 +122,13 @@ public class PanelPictureViewer extends JPanel
 	{
 		picturePanel.setCore(core);
 	}
+	
+	public void setIsWorking(boolean isWorking)
+	{
+		picturePanel.setIsWorking(isWorking);
+	}
+	
+	
 
 	//---------------------------------------------------- PRIVATE METHODS --//
 }

@@ -69,41 +69,62 @@ public class FingerPrintEngine implements MainFrameListener
 	{
 		// Disable buttons
 		mainWindow.setEnableButtons(false);
-		
+	
 		// Create binaryPicture
 		fingerprint = new FingerPrint(filename);
 		
+		BufferedImage buffer;
+		
 		// Print original image
-		mainWindow.setImage(0, fingerprint.getOriginalImage());
+		mainWindow.setIsWorking(0, true);
+		buffer = fingerprint.getOriginalImage();
+		mainWindow.setImage(0, buffer);
+		mainWindow.setIsWorking(0, false);
 		
 		// Print binary result
+		mainWindow.setIsWorking(1, true);
 		fingerprint.setColors(Color.black, Color.green);
 		fingerprint.binarizeMean();
-		mainWindow.setImage(1, fingerprint.toBufferedImage());
+		buffer = fingerprint.toBufferedImage();
+		mainWindow.setIsWorking(1, false);
+		mainWindow.setImage(1, buffer);
 		
 		// Print binary local result
+		mainWindow.setIsWorking(2, true);
 		fingerprint.setColors(Color.black, Color.green);
 		fingerprint.binarizeLocalMean();
-		mainWindow.setImage(2,fingerprint.toBufferedImage());
+		buffer = fingerprint.toBufferedImage();
+		mainWindow.setIsWorking(2, false);
+		mainWindow.setImage(2,buffer);
 		
 		// Remove noise
+		mainWindow.setIsWorking(3, true);
 		fingerprint.addBorders(1);
 		fingerprint.removeNoise();
 		fingerprint.removeNoise();
 		fingerprint.removeNoise();
-		mainWindow.setImage(3,fingerprint.toBufferedImage());
+		buffer = fingerprint.toBufferedImage();
+		mainWindow.setIsWorking(3, false);
+		mainWindow.setImage(3,buffer);
 		
 		// Skeletonization
+		mainWindow.setIsWorking(4, true);
 		fingerprint.skeletonize();
+		mainWindow.setIsWorking(4, false);
 		mainWindow.setImage(4,fingerprint.toBufferedImage());
 		
 		// Direction
+		mainWindow.setIsWorking(5, true);
 		direction [][] dirMatrix = fingerprint.getDirections();
-		BufferedImage buffer = fingerprint.directionToBufferedImage(dirMatrix);
+		buffer = fingerprint.directionToBufferedImage(dirMatrix);
+		mainWindow.setIsWorking(5, false);
 		mainWindow.setImage(5,buffer);
 		
 		// Core
+		mainWindow.setIsWorking(6, true);
+		buffer = fingerprint.directionToBufferedImage(dirMatrix);
 		Point core = fingerprint.getCore(dirMatrix);
+		mainWindow.setIsWorking(6, false);
 		mainWindow.setImage(6,buffer);
 		mainWindow.setCorePicture(6,core);
 		
