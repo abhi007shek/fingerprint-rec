@@ -118,9 +118,9 @@ public class PanelPictureViewer extends JPanel
 		picturePanel.setBufferedImage(buffer);
 	}
 	
-	public void setCore(Point core)
+	public void setCore(Point core, int coreRadius)
 	{
-		picturePanel.setCore(core);
+		picturePanel.setCore(core, coreRadius);
 	}
 	
 	public void setIsWorking(boolean isWorking)
