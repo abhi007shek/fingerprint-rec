@@ -72,7 +72,7 @@ public class Application
 	{	
 	    try 
 	    {	    	
-	    	UIManager.setLookAndFeel("de.javasoft.plaf.synthetica.SyntheticaBlackStarLookAndFeel");
+	    	UIManager.setLookAndFeel( "de.javasoft.plaf.synthetica.SyntheticaBlackStarLookAndFeel"  );
 	    } 
 	    catch (Exception e) 
 	    {
