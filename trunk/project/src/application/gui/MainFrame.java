@@ -125,14 +125,18 @@ public class MainFrame extends JFrame
 	/**
 	 * Set the core of the i-est fingerprint
 	 * @param i fingerprint index (1-7)
-	 * @param core 
-	 * @param coreRadius
+	 * @param core core
+	 * @param coreRadius core radius
 	 */
 	public void setCore(int i, Point core, int coreRadius)
 	{
 		pictureViewers[i].setCore(core,coreRadius);
 	}	
 	
+	/**
+	 * Enable / disable buttons
+	 * @param enabled
+	 */
 	public void setEnableButtons (boolean enabled)
 	{
 		btBrowse.setEnabled(enabled);
@@ -140,6 +144,9 @@ public class MainFrame extends JFrame
 	}
 
 	//---------------------------------------------------- PRIVATE METHODS --//
+	/**
+	 * Initialize buttons
+	 */
 	private void initButtons()
 	{
 		// Initial state
@@ -155,6 +162,9 @@ public class MainFrame extends JFrame
 									{onBtBrowsePressed();}});
 	}
 	
+	/**
+	 * Initialialize frame
+	 */
 	private void initFrame()
 	{
 		setSize(1024, 600);
@@ -169,6 +179,9 @@ public class MainFrame extends JFrame
 		setBackground(Color.black);
 	}
 	
+	/**
+	 * Create frame attributes
+	 */
 	private void createObjects()
 	{
 		// Main panel
@@ -200,6 +213,9 @@ public class MainFrame extends JFrame
 		listeners = new ArrayList<MainFrameListener>();
 	}
 	
+	/** 
+	 * Set component layouts
+	 */
 	private void setLayouts()
 	{
 		// Add panels to the main panel	
@@ -400,6 +416,9 @@ public class MainFrame extends JFrame
 		gbLayoutPicturesPanel.setConstraints(pictureViewers[7], gbConstPanel8);
 	}
 	
+	/**
+	 * Browse button action
+	 */
 	private void onBtBrowsePressed()
 	{
 		// Open the picture chooser dialog
@@ -414,11 +433,19 @@ public class MainFrame extends JFrame
 		}
 	}
 	
+	/**
+	 * Extract button action
+	 */
 	private void onBtExtractPressed()
 	{
 		fireStartExtraction();
 	}
 	
+	/**
+	 * Alert all the event listeners that a new picture is
+	 * selected
+	 * @param filename name of the new file
+	 */
 	private void fireNewPictureFile(String filename)
 	{
 		for(MainFrameListener listener : listeners) 
@@ -427,6 +454,10 @@ public class MainFrame extends JFrame
         }
 	}
 	
+	/**
+	 * Alert all the event listeners that a new extraction
+	 * begins
+	 */
 	private void fireStartExtraction()
 	{
 		for(MainFrameListener listener : listeners) 
