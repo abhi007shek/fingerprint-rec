@@ -41,6 +41,7 @@ public class PanelLegend extends JPanel
 	//---------------------------------------------------------- VARIABLES --//	
 	private JLabel textDir;						// Directions title
 	private JLabel textMinutiae;				// Minutiae title
+	private JLabel textCopyright;				// Copyright
 	
 	private LabelledColor colDirPos;			// Positive direction line
 	private LabelledColor colDirNeg;			// Negative direction line
@@ -49,6 +50,8 @@ public class PanelLegend extends JPanel
 
 	private LabelledColor colMinEnd;			// End point Minutiae line 
 	private LabelledColor colMinInt;			// Intersections Minutiae line
+	
+	
 
 	//------------------------------------------------------- CONSTRUCTORS --//
 	
@@ -58,9 +61,12 @@ public class PanelLegend extends JPanel
 	public PanelLegend() 
 	{
 		// Create objects
-		textDir = new JLabel("Ridge direction");
-		textMinutiae = new JLabel("Minutiae");
+		textDir = new JLabel("Direction legend");
+		textMinutiae = new JLabel("Minutiae legend");
+		textCopyright = new JLabel("design: T. Devaux & E. Senay");
+		
 		Font titleFont = new Font("Arial",Font.BOLD,15);
+		Font copyrightFont = new Font("Arial",0,9);
 		
 		colDirPos = new LabelledColor (Color.green,  " Pos. (/)");
 		colDirNeg = new LabelledColor (Color.yellow, " Neg. (\\)");
@@ -85,8 +91,15 @@ public class PanelLegend extends JPanel
 		
 		setPreferredSize(new Dimension(1,1));
 		
+		// Copyright
+		textCopyright.setVerticalAlignment(SwingConstants.CENTER);
+		textCopyright.setHorizontalAlignment(SwingConstants.CENTER);
+		textCopyright.setFont(copyrightFont);
+		textCopyright.setForeground(Color.darkGray);
+		textCopyright.setPreferredSize(new Dimension(1,1));	
+		
 		// Set layout
-		setLayout(new GridLayout(8,1,SPACE,SPACE));
+		setLayout(new GridLayout(9,1,SPACE,SPACE));
 		
 		// Add components
 		add(textDir);
@@ -97,6 +110,7 @@ public class PanelLegend extends JPanel
 		add(textMinutiae);
 		add(colMinEnd);
 		add(colMinInt);
+		add(textCopyright);
 	}
 
 	//------------------------------------------------------------ METHODS --//	

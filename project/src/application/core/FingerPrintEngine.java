@@ -132,7 +132,7 @@ public class FingerPrintEngine implements MainFrameListener
 		buffer = fingerprint.directionToBufferedImage(dirMatrix);
 		Point core = fingerprint.getCore(dirMatrix);
 		mainWindow.setImage(6,buffer);
-		int coreRadius = buffer.getWidth() / 3;
+		int coreRadius = buffer.getWidth() / 4;
 		mainWindow.setIsWorking(6, false);
 		mainWindow.setCore(6,core, coreRadius);
 		

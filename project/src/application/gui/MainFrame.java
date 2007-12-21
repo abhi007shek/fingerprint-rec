@@ -26,6 +26,7 @@ package application.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -39,6 +40,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -168,7 +170,7 @@ public class MainFrame extends JFrame
 	private void initFrame()
 	{
 		setSize(1024, 600);
-		setTitle("Fingerprint pattern extractor");
+		setTitle("sFFX - Simple Fingerprint Feature eXtractor");
 
 		// Icon
 		Image icon = Toolkit.getDefaultToolkit().getImage("./ressources/fp_icon.png");
@@ -203,8 +205,31 @@ public class MainFrame extends JFrame
 		legend = new PanelLegend();
 		
 		// Buttons
-		btBrowse = new JButton("...");
-		btExtract = new JButton("Extract !");
+		btBrowse = new JButton();
+		btExtract = new JButton();
+		
+		btBrowse.setPreferredSize(new Dimension(1,1));
+		btExtract.setPreferredSize(new Dimension(1,1));
+		
+		
+		try
+		{
+			btBrowse.setIcon(new ImageIcon("./ressources/bt_browse.png" ));
+		}
+		catch (Exception ex)
+		{
+			btBrowse.setText("...");
+		}
+		
+		try
+		{
+			btExtract.setIcon(new ImageIcon("./ressources/bt_extract.png" ));
+		}
+		catch (Exception ex)
+		{
+			btExtract.setText("Extract!");
+		}
+		
 		
 		// Picture chooser
 		pictureChooser = new PictureChooser();
@@ -245,8 +270,8 @@ public class MainFrame extends JFrame
 	            0,							// Line number
 	            1,							// Nb occupied lines
 	            1,							// Nb occupied columns
-	            10,						    // Relative horizontal space
-	            25,							// Relative vertical space
+	            14,						    // Relative horizontal space
+	            8,							// Relative vertical space
 	            GridBagConstraints.CENTER,	// Where to place component when resizing
 	            GridBagConstraints.BOTH,	// How to rescale component
 	            new Insets(SPACE, SPACE, SPACE, SPACE), // Spaces (top, left, bottom, right)
@@ -261,8 +286,8 @@ public class MainFrame extends JFrame
 	            1,							// Line number
 	            1,							// Nb occupied lines
 	            1,							// Nb occupied columns
-	            10,						    // Relative horizontal space
-	            25,							// Relative vertical space
+	            20,						    // Relative horizontal space
+	            42,							// Relative vertical space
 	            GridBagConstraints.CENTER,	// Where to place component when resizing
 	            GridBagConstraints.BOTH,	// How to rescale component
 	            new Insets(SPACE, SPACE, SPACE, SPACE), // Spaces (top, left, bottom, right)
@@ -277,7 +302,7 @@ public class MainFrame extends JFrame
 	            2,							// Line number
 	            1,							// Nb occupied lines
 	            2,							// Nb occupied columns
-	            10,							// Relative horizontal space
+	            20,							// Relative horizontal space
 	            25,							// Relative vertical space
 	            GridBagConstraints.CENTER,	// Where to place component when resizing
 	            GridBagConstraints.BOTH,	// How to rescale component
