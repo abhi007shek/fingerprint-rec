@@ -196,7 +196,7 @@ public class MainFrame extends JFrame
 		pictureViewers[1] = new PanelPictureViewer("2.Binary (mean)");
 		pictureViewers[2] = new PanelPictureViewer("3.Binary (local)");
 		pictureViewers[3] = new PanelPictureViewer("4.Smoothed");
-		pictureViewers[4] = new PanelPictureViewer("5.Skeleton");
+		pictureViewers[4] = new PanelPictureViewer("5.Zhang-Suen Skeleton");
 		pictureViewers[5] = new PanelPictureViewer("6.Direction");
 		pictureViewers[6] = new PanelPictureViewer("7.Core");
 		pictureViewers[7] = new PanelPictureViewer("8.Minutiae");
