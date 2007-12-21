@@ -33,6 +33,10 @@ public class PictureChooser extends JFileChooser
 	//---------------------------------------------------------- VARIABLES --//	
 
 	//------------------------------------------------------- CONSTRUCTORS --//	
+	
+	/**
+	 * Construct a picture chooser
+	 */
 	public PictureChooser()
 	{
 		// Initialize properties

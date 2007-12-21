@@ -52,28 +52,18 @@ import application.gui.picturechooser.PictureChooser;
 public class MainFrame extends JFrame
 {
 	//---------------------------------------------------------- CONSTANTS --//
-	private int SPACE = 3;
+	private int SPACE = 3;							// Space between components
 
 	//---------------------------------------------------------- VARIABLES --//
 	
-	// Main panel
-	private JPanel bkgPanel;
-	
-	// Picture panels	
-	private PanelPictureViewer [] pictureViewers;
-	
-	// Legend
-	private PanelLegend legend;
-	
-	// Buttons
-	private JButton btBrowse;
+	private JPanel bkgPanel;						// Main panel
+	private PanelPictureViewer [] pictureViewers;	// Picture panels
+	private PanelLegend legend;						// Legend
+	private JButton btBrowse;						// Buttons
 	private JButton btExtract;
+	private PictureChooser pictureChooser;			// Picture chooser
 	
-	// Picture chooser
-	private PictureChooser pictureChooser;
-	
-	// Listeners
-	private Collection<MainFrameListener> listeners;
+	private Collection<MainFrameListener> listeners;// Listeners
 	 
 	//------------------------------------------------------- CONSTRUCTORS --//
 	public MainFrame()
@@ -92,6 +82,9 @@ public class MainFrame extends JFrame
 	}
 
 	//------------------------------------------------------------ METHODS --//	
+	/**
+	 * Initialize frame
+	 */
 	public void init()
 	{
 		for (int i = 0 ; i < pictureViewers.length ; ++i)
@@ -100,22 +93,41 @@ public class MainFrame extends JFrame
 		}
 	}
 	
+	/**
+	 * Set the image of the i-est fingerprint
+	 * @param i fingerprint index (1-7)
+	 * @param image buffered image
+	 */
 	public void setImage (int i, BufferedImage image)
 	{
 		pictureViewers[i].setFingerprint(image);
 	}
 	
+	/**
+	 * Tell if the i-est fingerprint is computing
+	 * @param i fingerprint index (1-7)
+	 * @param isWorking true if is working
+	 */
 	public void setIsWorking (int i, boolean isWorking)
 	{
 		pictureViewers[i].setIsWorking(isWorking);
 	}
 
-	
+	/**
+	 * Add a main frame listener
+	 * @param listener listener
+	 */
 	public void addMainFrameListener(MainFrameListener listener) 
 	{
         listeners.add(listener);
     }
 	
+	/**
+	 * Set the core of the i-est fingerprint
+	 * @param i fingerprint index (1-7)
+	 * @param core 
+	 * @param coreRadius
+	 */
 	public void setCore(int i, Point core, int coreRadius)
 	{
 		pictureViewers[i].setCore(core,coreRadius);
