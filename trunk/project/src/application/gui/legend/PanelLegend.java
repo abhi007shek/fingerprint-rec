@@ -36,20 +36,25 @@ import javax.swing.SwingConstants;
 public class PanelLegend extends JPanel
 {
 	//---------------------------------------------------------- CONSTANTS --//
-	private int SPACE = 4; 
-	//---------------------------------------------------------- VARIABLES --//	
-	private JLabel textDir;
-	private JLabel textMinutiae;
+	private int SPACE = 4; 						// Space between objects
 	
-	private LabelledColor colDirPos;
-	private LabelledColor colDirNeg;
-	private LabelledColor colDirVer;
-	private LabelledColor colDirHor;
+	//---------------------------------------------------------- VARIABLES --//	
+	private JLabel textDir;						// Directions title
+	private JLabel textMinutiae;				// Minutiae title
+	
+	private LabelledColor colDirPos;			// Positive direction line
+	private LabelledColor colDirNeg;			// Negative direction line
+	private LabelledColor colDirVer;			// Vertical direction line
+	private LabelledColor colDirHor;			// Horizontal direction line
 
-	private LabelledColor colMinEnd;
-	private LabelledColor colMinInt;
+	private LabelledColor colMinEnd;			// End point Minutiae line 
+	private LabelledColor colMinInt;			// Intersections Minutiae line
 
-	//------------------------------------------------------- CONSTRUCTORS --//	
+	//------------------------------------------------------- CONSTRUCTORS --//
+	
+	/**
+	 * Construct a panel legend
+	 */
 	public PanelLegend() 
 	{
 		// Create objects
@@ -65,7 +70,7 @@ public class PanelLegend extends JPanel
 		colMinEnd = new LabelledColor (Color.blue, 	 " Endpoints");
 		colMinInt = new LabelledColor (Color.magenta," Intersect.");
 		
-		// Options
+		// Set options
 		setBackground(Color.black);
 		textDir.setBackground(Color.black);
 		textMinutiae.setBackground(Color.black);
@@ -79,8 +84,6 @@ public class PanelLegend extends JPanel
 		textMinutiae.setPreferredSize(new Dimension(1,1));
 		
 		setPreferredSize(new Dimension(1,1));
-		
-		//setBackground(new Color (100,100,100));
 		
 		// Set layout
 		setLayout(new GridLayout(8,1,SPACE,SPACE));
