@@ -34,12 +34,17 @@ public class Application
 	//---------------------------------------------------------- CONSTANTS --//
 
 	//---------------------------------------------------------- VARIABLES --//	
-	private static MainFrame mainWindow;
-	private static FingerPrintEngine fingerPrintEngine;
+	private static MainFrame mainWindow;				// Main window
+	private static FingerPrintEngine fingerPrintEngine;	// Fingerprint engine
 	
 	//------------------------------------------------------- CONSTRUCTORS --//	
 
-	//------------------------------------------------------------ METHODS --//	
+	//------------------------------------------------------------ METHODS --//
+	/**
+	 * Launch the application
+	 * 
+	 * @param args application arguments
+	 */
 	public static void main(String[] args)
 	{
 		// Set style
@@ -60,6 +65,9 @@ public class Application
 	}
 	
 	//---------------------------------------------------- PRIVATE METHODS --//
+	/**
+	 * Set the style of the application
+	 */
 	private static void setStyle()
 	{	
 	    try 

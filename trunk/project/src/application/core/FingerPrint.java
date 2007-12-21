@@ -38,23 +38,32 @@ import javax.imageio.ImageIO;
 public class FingerPrint
 
 {
+	//-------------------------------------------------------------- TYPES --//
+	// Pixel direction
 	public enum direction { NONE, HORIZONTAL, VERTICAL, POSITIVE, NEGATIVE};
-	//---------------------------------------------------------- CONSTANTS --//
-	Color DEFAULT_ZERO_COLOR = Color.black;
-	Color DEFAULT_ONE_COLOR = Color.pink;
-	//---------------------------------------------------------- VARIABLES --//	
-	boolean binMap [][];
-	int [][] greyMap;
-	int greymean;
 	
-	int width;
+	
+	//---------------------------------------------------------- CONSTANTS --//
+	Color DEFAULT_ZERO_COLOR = Color.black;		// Default color of FALSE pixels
+	Color DEFAULT_ONE_COLOR = Color.pink;		// Default color of TRUE pixels
+	//---------------------------------------------------------- VARIABLES --//	
+	boolean binMap [][];						// Binary picture
+	int [][] greyMap;							// Grey level picture
+	int greymean;								// Global mean of greylevel map
+	
+	int width;									// Dimensions
 	int height;
-	Color zeroColor;
+	Color zeroColor;							// Colors
 	Color oneColor;
 	
-	BufferedImage originalImage;
+	BufferedImage originalImage;				// Original image
 	
-	//------------------------------------------------------- CONSTRUCTORS --//		
+	//------------------------------------------------------- CONSTRUCTORS --//
+	/**
+	 * Build a fingerprint from a filename
+	 * 
+	 * @param filename file from which a fingerprint is build
+	 */
 	public FingerPrint (String filename)
 	{
 		// Initialize colors
@@ -64,6 +73,7 @@ public class FingerPrint
 		// Open and create the buffered image
 		try 
 		{
+			// Read file
 			originalImage = ImageIO.read(new File(filename));
 			
 			// Create the binary picture
@@ -75,11 +85,11 @@ public class FingerPrint
 			
 			// Generate greymap
 			int curColor;
-			
 			for (int i = 0 ; i < width ; ++i)
 			{
 				for (int j = 0 ; j < height ; ++j)
 				{
+					// Split the integer color
 					curColor = originalImage.getRGB(i,j);
 					int R = (curColor >>16 ) & 0xFF;
 					int G = (curColor >> 8 ) & 0xFF;
@@ -101,20 +111,64 @@ public class FingerPrint
 	}
 
 	//------------------------------------------------------------ METHODS --//	
+	/**
+	 * Get the width
+	 * 
+	 * @return the width
+	 */
 	public int getWidth() 
 	{
 		return width;
 	}
 
+	/**
+	 * Get the height
+	 * 
+	 * @return the height
+	 */
 	public int getHeight() 
 	{
 		return height;
 	}
 	
+	/**
+	 * Return the original image
+	 *
+	 * @return the original image
+	 */
+	public BufferedImage getOriginalImage() 
+	{
+		return originalImage;
+	}
+	
+	/**
+	 * Set the colors used when converting the binary image to buffered image
+	 * 
+	 * @param zeroColor Color of zero (off) pixels
+	 * @param zeroColor Color of one (on) pixels
+	 */
+	public void setColors(Color zeroColor, Color oneColor)
+	{
+		this.zeroColor = zeroColor;
+		this.oneColor = oneColor;
+	}
+	
+	/**
+	 * Extract intersection points from the binary image, which is a 
+	 * kind of minutiae
+	 *  
+	 * @param core the core point (center of fingerprint)
+	 * @param coreRadius radius from core that defines the considered area
+	 * @return the array of intersection points.
+	 */	
 	public ArrayList<Point> getMinutiaeIntersections (Point core, int coreRadius )
 	{
+		// Variables
 		ArrayList<Point> minutiae = new ArrayList<Point>();
+		int nbOnNeighbors;
+		Point currentPoint;
 		
+		// Define bounds
 		int minI = core.x - coreRadius;
 		int maxI = core.x + coreRadius;
 		int minJ = core.y - coreRadius;
@@ -131,10 +185,8 @@ public class FingerPrint
 		
 		if (maxJ > height - 2)
 			maxJ = height - 2;
-		
-		int nbOnNeighbors;
-		Point currentPoint;
-		
+
+		// Iterate on binary picture
 		for (int i = minI ; i < maxI ; ++i)
 		{
 			for (int j = minJ ; j < maxJ ; ++j)
@@ -157,10 +209,23 @@ public class FingerPrint
 		return minutiae;
 	}
 	
+	/**
+	 * Extract end points from the binary image, which is a 
+	 * kind of minutiae
+	 *  
+	 * @param core the core point (center of fingerprint)
+	 * @param coreRadius radius from core that defines the considered area
+	 * @return the array of end points.
+	 */		
 	public ArrayList<Point> getMinutiaeEndpoints (Point core, int coreRadius )
 	{
+		// Variables
 		ArrayList<Point> minutiae = new ArrayList<Point>();
+		int nbOnNeighbors;
+		boolean [] neighbors;
+		Point currentPoint;
 		
+		// Set iteration bounds
 		int minI = core.x - coreRadius;
 		int maxI = core.x + coreRadius;
 		int minJ = core.y - coreRadius;
@@ -178,9 +243,7 @@ public class FingerPrint
 		if (maxJ > height - 2)
 			maxJ = height - 2;
 		
-		int nbOnNeighbors;
-		boolean [] neighbors;
-		Point currentPoint;
+		// Iterate on the binary image 
 		for (int i = minI ; i < maxI ; ++i)
 		{
 			for (int j = minJ ; j < maxJ ; ++j)
@@ -206,6 +269,11 @@ public class FingerPrint
 		return minutiae;
 	}
 	
+	/**
+	 * Convert the binary image to the buffered image (using the on and off colors)
+	 * 
+	 * @return the buffered image
+	 */
 	public BufferedImage toBufferedImage()
 	{
 		BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -213,6 +281,7 @@ public class FingerPrint
 		{
 			for (int j = 0 ; j < height ; ++j)
 			{
+				// Binary value to color
 				if (binMap[i][j] == false)
 				{
 					bufferedImage.setRGB(i, j, zeroColor.getRGB());
@@ -227,6 +296,12 @@ public class FingerPrint
 		return bufferedImage;
 	}
 	
+	/**
+	 * Set the binary matrix of the object from the greylevel matrix, using
+	 * global grey mean as threshold.
+	 * Contract : the greylevel matrix has to be created before calling this 
+	 * method.
+	 */
 	public void binarizeMean()
 	{
 		// Generate the boolean value
@@ -239,25 +314,36 @@ public class FingerPrint
 		}
 	}
 	
+	/**
+	 * Set the binary matrix of the object from the greylevel matrix, using
+	 * local grey mean as thresholds. This method requires more computation than
+	 * binarizeMean, but the result is better.
+	 * Contract : the greylevel matrix has to be created before calling this 
+	 * method.
+	 */
 	public void binarizeLocalMean()
 	{
+		// Variables
 		int windowSize = 20;
 		int step = 20;
-		
 		float localGreyMean;
+		int ik, jk;
+		
+		// Iterate on the binary matrix
 		for (int i = 0 ; i < width ; i += step)
 		{
 			for (int j = 0 ; j < height ; j += step)
 			{					
-				// Get greymean
+				// Get local grey seum
 				localGreyMean = 0;
-				int ik, jk = 0;
+				ik = 0;
+				jk = 0;
+				
 				for (ik = i ; ik < (i + windowSize); ++ik)
 				{
 					if (ik >= width)
 						break;
 					
-					// Get greymean
 					for (jk = j ; jk < (j + windowSize); ++jk)
 					{
 						if (jk >= height)
@@ -267,11 +353,11 @@ public class FingerPrint
 					}
 				}
 				
+				// Calculate the mean
 				if (jk*ik != 0)
 				{
 					localGreyMean = localGreyMean / ((ik-i)*(jk-j));
 				}
-				
 				
 				// If the local grey mean is too high (too permissive)
 				// we take the global greymean
@@ -280,7 +366,7 @@ public class FingerPrint
 					localGreyMean = 0.75f*greymean + 0.25f*localGreyMean;
 				}
 				
-				// Binarize window
+				// Binarize all the pixels in the window
 				for (ik = i ; ik < (i + windowSize); ++ik)
 				{
 					if (ik >= width)
@@ -295,22 +381,15 @@ public class FingerPrint
 						binMap[ik][jk] = !(greyMap[ik][jk] > (localGreyMean)); 
 					}
 				}
-				
 			}
 		}
 	}
 	
-	public BufferedImage getOriginalImage() 
-	{
-		return originalImage;
-	}
-	
-	public void setColors(Color zeroColor, Color oneColor)
-	{
-		this.zeroColor = zeroColor;
-		this.oneColor = oneColor;
-	}
-	
+	/**
+	 * Add or remove borders on the binary matrix
+	 * 
+	 * @param size number of pixels to add (or remove if < 0)
+	 */
 	public void addBorders(int size)
 	{
 		boolean [][] newmap = new boolean [width + 2*size][height + 2*size];
@@ -341,23 +420,30 @@ public class FingerPrint
 		binMap = newmap;
 	}
 	
+	/**
+	 * Remove noise from the binary picture using mean algorithm 
+	 */	
 	public void removeNoise()
 	{
+		// Mean filter
 		float [][] filter = {	{0.0625f,0.1250f,0.0625f},
 								{0.1250f,0.2500f,0.1250f},
 								{0.0625f,0.1250f,0.0625f}};
 		
+		// Variables
 		int limWidth  = width -1;
 		int limHeight = height-1;
-		
 		boolean [][] newmap = new boolean [width][height];
-		copyMatrix(binMap, newmap);
+		float val;
 		
+		copyMatrix(binMap, newmap);
 		for (int i = 1 ; i < limWidth ; ++i)
 		{
 			for (int j = 1 ; j < limHeight ; ++j)
 			{
-				float val = 0;
+				val = 0;
+				
+				// Apply the filter
 				for (int ik = -1 ; ik <= 1 ; ++ik)
 		        {
 			        for (int jk = -1 ; jk <= 1 ; ++jk)
@@ -372,21 +458,26 @@ public class FingerPrint
 		copyMatrix(newmap, binMap);
 	}
 	
+	/**
+	 * Use the Zhang-Suen algorithm on the binary picture and alter
+	 * the actual binary picture.
+	 */
 	public void skeletonize()
 	{
+		// Bounds
 		int fstLin = 1;
 		int lstLin = width - 1;
 		int fstCol = 1;
 		int lstCol = height - 1;
 		
+		// Variables
 		boolean [][] prevM = new boolean [width][height];;
 		boolean [][] newM = new boolean [width][height];;
-		
-		copyMatrix(binMap, prevM);
-		
+		boolean [] neighbors;
 		int A, B;
 		
-		boolean [] neighbors;
+		// Initialize
+		copyMatrix(binMap, prevM);
 		
 		// We skeletonize until there are no changes between two iterations
 		while (true)
@@ -404,6 +495,7 @@ public class FingerPrint
 					B = getSum(neighbors);
 					A = getTransitions(neighbors);
 					
+					// Decide if we remove the pixel
 					if ( ( B >= 2 ) && ( B <= 6 ) )
 					{
 						if ( A == 1 )
@@ -431,6 +523,7 @@ public class FingerPrint
 					B = getSum(neighbors);
 					A = getTransitions(neighbors);
 					
+					// Decide if we remove the pixel
 					if ( ( B >= 2 ) && ( B <= 6 ) )
 					{
 						if ( A == 1 )
@@ -462,6 +555,11 @@ public class FingerPrint
 		copyMatrix(newM, binMap);
 	}
 
+	/**
+	 * Convert the direction matrix to direction buffered image
+	 * @param dirMatrix
+	 * @return the buffered image
+	 */
 	public BufferedImage directionToBufferedImage(direction [][] dirMatrix)
 	{
 		BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -477,6 +575,10 @@ public class FingerPrint
 		return bufferedImage;
 	}
 	
+	/**
+	 * Calculate and return the directions of ridges (for each pixel)
+	 * @return the direction matrix
+	 */
 	public direction [][] getDirections()
 	{
 		// Direction patterns
@@ -509,15 +611,26 @@ public class FingerPrint
 		return dirMatrix;
 	}
 	
+	/**
+	 * Calculate and return the core of the binary matrix.
+	 * @param dirMatrix
+	 * @return the core
+	 */
 	public Point getCore (direction [][] dirMatrix)
 	{
 		// Private class to store partial results
+		// of a window
 		class coreInfos
 		{
 			private int nbVer, nbHor, nbPos, nbNeg;
 			
+			/**
+			 * Return the indicator of the window
+			 * @return indicator
+			 */
 			public float getIndex()
 			{				
+				// Store the number of pixel in each direction
 				float perVer, perHor, perPos, perNeg;
 				float total = nbVer + nbHor + nbPos + nbNeg;
 				float res;
@@ -538,6 +651,9 @@ public class FingerPrint
 				return res;
 			}
 			
+			/**
+			 * Reset all values
+			 */
 			public void reset()
 			{
 				nbVer = 0;
@@ -546,6 +662,10 @@ public class FingerPrint
 				nbNeg = 0;				
 			}
 			
+			/**
+			 * Take values from another object
+			 * @param r read object
+			 */
 			public void copyFrom(coreInfos r)
 			{
 				nbVer = r.nbVer;
@@ -554,6 +674,7 @@ public class FingerPrint
 				nbNeg = r.nbNeg;					
 			}
 			
+			// Increment values
 			public void incVertical  (){++nbVer;}
 			public void incHorizontal(){++nbHor;}
 			public void incPositive  (){++nbPos;}
@@ -564,18 +685,20 @@ public class FingerPrint
 		Point core = new Point();
 		int windowSize = width / 8;
 		
-		int minI = windowSize;
-		int maxI = width - windowSize;
-		int minJ = windowSize;
-		int maxJ = height - windowSize;
-		
 		int minIK, maxIK, minJK, maxJK;
 		
 		coreInfos bestCandidate = new coreInfos();
 		coreInfos currentCandidate = new coreInfos();
 		
+		// Bounds
+		int minI = windowSize;
+		int maxI = width - windowSize;
+		int minJ = windowSize;
+		int maxJ = height - windowSize;
+		
 		bestCandidate.reset();
 		
+		// Iterate on the picture
 		for (int i = minI ; i < maxI ; ++i)
 		{
 			for (int j = minJ ; j < maxJ ; ++j)
@@ -627,99 +750,14 @@ public class FingerPrint
 		return core;
 	}
 	
-	public Point getCore2 (direction [][] dirMatrix)
-	{
-		Point core = new Point();
-		
-		int windowSize = 5;
-		
-		int minI = windowSize;
-		int maxI = width - windowSize;
-		int minJ = windowSize;
-		int maxJ = height - windowSize;
-		
-		class tempResult
-		{
-			public int nbHorizontal;
-			public int nbVertical;
-			
-			public void reset()
-			{
-				nbHorizontal = 0;
-				nbVertical = 0;
-			}
-			
-			public void copy(tempResult r)
-			{
-				this.nbHorizontal = r.nbHorizontal;
-				this.nbVertical = r.nbVertical;
-			}
-			
-			public boolean isBetter(tempResult r)
-			{
-				if ((r.nbHorizontal + r.nbVertical) >= (nbHorizontal + nbVertical))
-				{
-					if ((nbHorizontal == 0) && (r.nbHorizontal != 0))
-						return true;
-					
-					if ((nbVertical == 0) && (r.nbVertical != 0))
-						return true;
-					
-//					if (java.lang.Math.abs(r.nbHorizontal - r.nbVertical) <= java.lang.Math.abs(nbHorizontal - nbVertical))
-//						return true;
-				}
-				
-				return false;
-			}
-			
-			public void incH()
-			{
-				nbHorizontal++;
-			}
-			
-			public void incV()
-			{
-				nbVertical++;
-			}
-		};
-		
-		tempResult bestResult = new tempResult();
-		tempResult currentResult = new tempResult();
-		
-
-		for (int i = minI ; i < maxI ; ++i)
-		{
-			for (int j = minJ ; j < maxJ ; ++j)
-			{				
-				currentResult.reset();
-				
-				// Check the number of pixel in each direction
-				for (int ik = i-windowSize ; ik < i+windowSize ; ++ik)
-				{
-					for (int jk = j-windowSize ; jk < j+windowSize ; ++jk)
-					{
-						if (dirMatrix[ik][jk] == direction.HORIZONTAL)
-							currentResult.incH();
-						if (dirMatrix[ik][jk] == direction.VERTICAL)
-							currentResult.incV();
-					}
-				}
-				
-				// Check if the new point is better
-				if (bestResult.isBetter(currentResult))
-				{
-					bestResult.copy(currentResult);
-					core.x = i;
-					core.y = j;
-				}
-			}
-		}
-		
-		return core;
-	}
-
 	//---------------------------------------------------- PRIVATE METHODS --//
 	
+	/**
+	 * Extract the 4-neighbors of a point on the binary image
+	 * @param i x value
+	 * @param j y value
+	 * @return the table of neighbors
+	 */
 	private boolean [] getFourNeigbors(int i, int j)
 	{
 		boolean []neighbors = new boolean [4];
@@ -731,6 +769,12 @@ public class FingerPrint
 		return neighbors;
 	}
 	
+	/**
+	 * Get the greylevel mean of the greylevel ma
+	 * @param greymap Grey level map
+	 * @param w width of the map
+	 * @param h height of the map
+	 */
 	private int getGreylevelMean( int [][] greymap, int w, int h)
 	{
 		int total = 0;
@@ -745,11 +789,23 @@ public class FingerPrint
 		return total/(w*h);
 	}
 	
+	/**
+	 * Convert a boolean to an integer 
+	 * (true  -> 1
+	 *  false -> 0)
+	 * @param boolean value
+	 * @return corresponding integer value
+	 */
 	private int booleanToInt(boolean b)
 	{
 		return (b==true)?1:0;
 	}
 	
+	/**
+	 * Copy source matrix to destination
+	 * @param src Source matrix
+	 * @param dst Destination matrix
+	 */
 	private void copyMatrix (boolean [][] src, boolean [][] dst)
 	{
 		for (int i = 0 ; i < width ; ++i)
@@ -761,6 +817,13 @@ public class FingerPrint
 		}
 	}
 	
+	/**
+	 * Extract the 8-neighbors around the specified pixel.
+	 * @param mat input matrix
+	 * @param i x value
+	 * @param j y value
+	 * @return a table of the neighbors
+	 */
 	private boolean[] getNeigbors(boolean [][] mat, int i, int j)
 	{
 		boolean[] neigbors = new boolean[8];
@@ -777,6 +840,12 @@ public class FingerPrint
 		return neigbors;
 	}
 	
+	/**
+	 * Calculate the euclidian distance between two points
+	 * @param a first point
+	 * @param b second point
+	 * @return distance between two points
+	 */
 	private float getDistance(Point a, Point b)
 	{
 		int deltaX = b.x - a.x;
@@ -785,6 +854,11 @@ public class FingerPrint
 		return (float)Math.sqrt(Math.abs(deltaX*deltaX)+Math.abs(deltaY*deltaY));
 	}
 	
+	/**
+	 * Calculate the false->true transitions in neighbors table.
+	 * @param neighbors
+	 * @return the number of transitions
+	 */
 	private int getTransitions (boolean [] neighbors)
 	{
 		int nbTransitions = 0;
@@ -801,6 +875,11 @@ public class FingerPrint
 		return nbTransitions;
 	}
 	
+	/**
+	 * Calculate the number of ON pixels in a table
+	 * @param vals table
+	 * @return the number of ON pixels
+	 */
 	private int getSum (boolean [] vals)
 	{
 		int max = vals.length;
@@ -814,12 +893,21 @@ public class FingerPrint
 		return sum;
 	}
 	
+	/**
+	 * Indicates if two boolean matrices are equals
+	 * @param A first matrix
+	 * @param B second matrix
+	 * @param w width of the two matrices
+	 * @param h height of the two matrices
+	 * @return true if matrices are equal
+	 */
 	private boolean equal(boolean [][] A, boolean [][] B, int w, int h)
 	{
 		for (int i = 0 ; i < w ; ++i)
 		{
 			for (int j = 0 ; j < h ; ++j)
 			{
+				// If a value is different, matrices are different
 				if (A[i][j] != B[i][j])
 					return false;
 			}
@@ -828,6 +916,11 @@ public class FingerPrint
 		return true;
 	}
 	
+	/**
+	 * Get the color of the given direction
+	 * @param dir direction
+	 * @return the corresponding color
+	 */
 	private Color dirToColor(direction dir)
 	{
 		switch (dir) 
