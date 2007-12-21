@@ -50,8 +50,8 @@ public class PicturePreviewPanel extends JPanel implements PropertyChangeListene
 	//---------------------------------------------------------- CONSTANTS --//
 
 	//---------------------------------------------------------- VARIABLES --//	
-	private JLabel label;
-	private int maxImgWidth;
+	private JLabel label;					// Label
+	private int maxImgWidth;				// Image width
 	
 	//------------------------------------------------------- CONSTRUCTORS --//	
 
@@ -59,20 +59,31 @@ public class PicturePreviewPanel extends JPanel implements PropertyChangeListene
 
 	//---------------------------------------------------- PRIVATE METHODS --//
 	
-
+	/**
+	 * Construc a picture previewer
+	 */
 	public PicturePreviewPanel() 
 	{
+		// Init values
 		setLayout(new BorderLayout(5,5));
 		setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+		
 		add(new JLabel("Preview:"), BorderLayout.NORTH);
 		label = new JLabel();
 		label.setOpaque(false);
 		label.setPreferredSize(new Dimension(200, 200));
+		
 		maxImgWidth = 195;
 		label.setBorder(BorderFactory.createEtchedBorder());
+		
 		add(label, BorderLayout.CENTER);
 	}
 
+	/**
+	 * Called when a property change
+	 * 
+	 * @param evt Change event
+	 */
 	public void propertyChange(PropertyChangeEvent evt) 
 	{
 		Icon icon = null;
@@ -83,6 +94,7 @@ public class PicturePreviewPanel extends JPanel implements PropertyChangeListene
 			{
 				try 
 				{
+					// Read and display the picture
 					BufferedImage img = ImageIO.read(newFile);
 					float width = img.getWidth();
 					float height = img.getHeight();

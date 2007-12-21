@@ -33,16 +33,23 @@ public class SimpleFilter extends FileFilter
 	//---------------------------------------------------------- CONSTANTS --//
 
 	//---------------------------------------------------------- VARIABLES --//	
-	private String description;
-	private String extension;
+	private String description;			// Filter description
+	private String extension;			// Filter extension
 	
 	//------------------------------------------------------- CONSTRUCTORS --//	
 	public SimpleFilter(String description, String extension)
 	{
+		// Copy values
 		this.description = description;
 		this.extension = extension;
 	}
 	//------------------------------------------------------------ METHODS --//	
+	
+	/**
+	 * Indicates if the file is acceptable
+	 * 
+	 * @param file file to verify
+	 */
 	public boolean accept(File file)
 	{
 		if(file.isDirectory()) 
@@ -53,6 +60,10 @@ public class SimpleFilter extends FileFilter
 		return myFile.endsWith(extension);
 	}
 	
+	/** 
+	 * Get the filter description
+	 * @return the filter description
+	 */
 	public String getDescription()
 	{
 		return description;

@@ -39,14 +39,20 @@ import javax.swing.JTextField;
 public class PanelPictureViewer extends JPanel
 {
 	//---------------------------------------------------------- CONSTANTS --//
-	private int SPACE = 4;
+	private int SPACE = 4;					// Space between elements
 	
 	//---------------------------------------------------------- VARIABLES --//
-	JTextField titlePanel;
-	PanelFingerprint picturePanel;
+	JTextField titlePanel;					// Title panel
+	PanelFingerprint picturePanel;			// Fingerprint panel
 	
 
 	//------------------------------------------------------- CONSTRUCTORS --//
+	
+	/**
+	 * Construct a PanelPictureViewer
+	 * 
+	 * @param pictureName name of the picture (title)
+	 */
 	public PanelPictureViewer ( String pictureName)
 	{
 		// Initialize values
@@ -110,27 +116,41 @@ public class PanelPictureViewer extends JPanel
 	}
 
 	//------------------------------------------------------------ METHODS --//	
+	/**
+	 * Init the component
+	 */
 	public void init()
 	{
 		picturePanel.init();
 	}
 	
+	/**
+	 * Set the fingerprint buffer
+	 * @param buffer buffer
+	 */
 	public void setFingerprint(BufferedImage buffer)
 	{
 		picturePanel.setBufferedImage(buffer);
 	}
 	
+	/**
+	 * Set the core and core radius
+	 * @param core core
+	 * @param coreRadius core radius
+	 */
 	public void setCore(Point core, int coreRadius)
 	{
 		picturePanel.setCore(core, coreRadius);
 	}
 	
+	/**
+	 * Tell if the fingerprint computation is in progress
+	 * @param isWorking
+	 */
 	public void setIsWorking(boolean isWorking)
 	{
 		picturePanel.setIsWorking(isWorking);
 	}
 	
-	
-
 	//---------------------------------------------------- PRIVATE METHODS --//
 }
