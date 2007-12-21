@@ -1,7 +1,6 @@
 /*-----------------------------------------------------------------------------+
 
 			Filename			: PictureChooser.java
-			Creation date		: 17 déc. 07
 		
 			Project				: fingerprint-recog
 			Package				: application.gui.panels
@@ -25,8 +24,6 @@
 
 package application.gui.picturechooser;
 
-import java.io.File;
-
 import javax.swing.JFileChooser;
 
 public class PictureChooser extends JFileChooser
@@ -40,17 +37,19 @@ public class PictureChooser extends JFileChooser
 	{
 		// Initialize properties
 		setMultiSelectionEnabled(false);
+		setDialogTitle("Select a fingerprint raster image");
 		
 		// Initial position
-		setCurrentDirectory(new File("/"));
-		changeToParentDirectory();
+		setCurrentDirectory(new java.io.File("./data"));
 		
 		// Set filters
+		setFileSelectionMode(JFileChooser.FILES_ONLY);
+		setAcceptAllFileFilterUsed(false);
+		
+		addChoosableFileFilter(new SimpleFilter("PNG (*.png)",".png"));
 		addChoosableFileFilter(new SimpleFilter("BMP (*.bmp)",".bmp"));
 		addChoosableFileFilter(new SimpleFilter("GIF (*.gif)",".gif"));
 		addChoosableFileFilter(new SimpleFilter("JPEG (*.jpg)",".jpg"));
-		addChoosableFileFilter(new SimpleFilter("PNG (*.png)",".png"));
-		//addChoosableFileFilter(new SimpleFilter("TIFF (*.tif)",".tif"));
 		
 		// Add picture previewer
 		PicturePreviewPanel preview = new PicturePreviewPanel();

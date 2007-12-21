@@ -1,7 +1,6 @@
 /*-----------------------------------------------------------------------------+
 
 			Filename			: MainFrameListener.java
-			Creation date		: 17 déc. 07
 		
 			Project				: fingerprint-recog
 			Package				: application.core
