@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Thu Dec 20 21:44:08 GMT-05:00 2007
+onejar.license.required=false
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=fingerprint-recog_fat.jar
+manifest.mergeall=true
+manifest.mainclass=application.core.Application
+manifest.file=<createnew>
+jarname.isextern=false
+onejar.expand=
+excludes=
+includes=
