@@ -1,7 +1,6 @@
 /*-----------------------------------------------------------------------------+
 
 			Filename			: LabelledColor.java
-			Creation date		: 20 déc. 07
 		
 			Project				: fingerprint-recog
 			Package				: application.gui.legend

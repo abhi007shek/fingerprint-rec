@@ -1,7 +1,6 @@
 /*-----------------------------------------------------------------------------+
 
 			Filename			: Matrix.java
-			Creation date		: 16 déc. 07
 		
 			Project				: fingerprint-recog
 			Package				: application.core
