@@ -34,7 +34,9 @@ import application.gui.MainFrame;
 
 public class FingerPrintEngine implements MainFrameListener
 {
-	//---------------------------------------------------------- CONSTANTS --//
+	//------------------------------------------------------------- TYPES --//
+	
+	// Thread that only compute fingerprint images
 	private class computeThread extends Thread
 	{
 		public void run()
@@ -43,25 +45,33 @@ public class FingerPrintEngine implements MainFrameListener
 		}
 	}
 	
+	//---------------------------------------------------------- CONSTANTS --//
+	
 	//---------------------------------------------------------- VARIABLES --//	
-	private MainFrame mainWindow;
-	private String filename;
-	private FingerPrint fingerprint;
-	private computeThread thread;
+	private MainFrame mainWindow;				// Main frame
+	private String filename;					// Filename of the current fingerprint
+	private FingerPrint fingerprint;			// Current fingerprint
+	private computeThread thread;				// Computation thread
 	
 	//------------------------------------------------------- CONSTRUCTORS --//	
 	
 	//------------------------------------------------------------ METHODS --//	
 	
+	/**
+	 * Construct the fingerprint engine from a given window
+	 * @param the main window
+	 */
 	public FingerPrintEngine(MainFrame mainWindow) 
 	{
 		this.mainWindow = mainWindow;
 		thread = new computeThread();
-	}
-	
+	}	
 	
 	//---------------------------------------------------- PRIVATE METHODS --//
 
+	/**
+	 * Compute all the fingerprint data and synchronize with the GUI
+	 */
 	private void compute()
 	{
 		// Disable buttons
@@ -149,19 +159,9 @@ public class FingerPrintEngine implements MainFrameListener
 		
 		// Add to buffer
 		mainWindow.setImage(7,buffer);
-		
 		mainWindow.setIsWorking(7, false);		
-//		try 
-//		{
-//			ImageIO.write(fingerprint.directionToBufferedImage(dirMatrix), "bmp", new File("C:/temp/myImage2.bmp"));
-//		} 
-//		catch (IOException e) 
-//		{
-//			// TODO ENLEVER TOUT
-//			e.printStackTrace();
-//		}
-//		
-//		// Enable buttons
+		
+		// Enable buttons
 		mainWindow.setEnableButtons(true);
 		
 	}

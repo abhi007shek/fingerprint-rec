@@ -40,27 +40,44 @@ public class PanelFingerprint extends JPanel
 	//---------------------------------------------------------- CONSTANTS --//
 
 	//---------------------------------------------------------- VARIABLES --//	
-	BufferedImage buffer;
-	Point core;
-	boolean isWorking;
-	Image loadingIcon;
-	Image coreIcon;
-	int coreRadius;
+	BufferedImage buffer;				// Buffered image
+	Point core;							// Core point
+	boolean isWorking;					// Indicates if the picture is being computed
+	Image loadingIcon;					// Loading animation
+	Image coreIcon;						// Core icon
+	int coreRadius;						// Core radius
 	
 	//------------------------------------------------------- CONSTRUCTORS --//	
+	/**
+	 * Construct a PanelFingerprint
+	 */
 	public PanelFingerprint() 
 	{
+		// Initialize values
 		isWorking = false;
+		
+		// Load images
 		loadingIcon = Toolkit.getDefaultToolkit().getImage("./ressources/loading.gif");
 		coreIcon = Toolkit.getDefaultToolkit().getImage("./ressources/core.png");
 	}
 	//------------------------------------------------------------ METHODS --//	
+	/**
+	 * Set the buffered image of the fingerprint
+	 * 
+	 * @param buffer buffered image
+	 */
 	public void setBufferedImage (BufferedImage buffer)
 	{
 		this.buffer = buffer;
 		repaint();
 	}
 	
+	/**
+	 * Set the core point and radius
+	 * 
+	 * @param core core point
+	 * @param coreRadius core radius
+	 */
 	public void setCore (Point core, int coreRadius)
 	{
 		this.core = core;
@@ -68,12 +85,21 @@ public class PanelFingerprint extends JPanel
 		repaint();
 	}
 	
+	/**
+	 * Set the fingerprint image as working or not.
+	 * When working, the panel displays the loading icon
+	 * 
+	 * @param isWorking
+	 */
 	public void setIsWorking(boolean isWorking)
 	{
 		this.isWorking = isWorking;
 		repaint();
 	}
 	
+	/**
+	 * Init the component
+	 */
 	public void init()
 	{
 		core = null;
@@ -89,6 +115,7 @@ public class PanelFingerprint extends JPanel
 		
 		Graphics2D g2d=(Graphics2D) g;
 		
+		// If working, only draw the loading icon
 		if (isWorking)
 		{
 			g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
@@ -103,9 +130,11 @@ public class PanelFingerprint extends JPanel
 			return;
 		}
 		
+		// Set the rendering to Bicubic interpolation
 		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
 			     RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-
+		
+		// Draw the core
 		if (core != null)
 		{
 			buffer.getGraphics().drawImage(	coreIcon,
@@ -119,6 +148,7 @@ public class PanelFingerprint extends JPanel
 			buffer.getGraphics().drawOval(core.x-coreRadius, core.y-coreRadius, 2*coreRadius, 2*coreRadius);
 		}
 		
+		// If not null, draw the buffer
 		if (buffer != null)
 		{
 			g.drawImage(buffer,0,0,getWidth(), getHeight(), this);

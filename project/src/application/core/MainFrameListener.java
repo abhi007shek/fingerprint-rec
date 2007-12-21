@@ -26,6 +26,14 @@ package application.core;
 
 public interface MainFrameListener 
 {
+	/**
+	 * Executed when a new file is selected
+	 * @param filename filename (full path)
+	 */
 	public void newPictureFile(String filename);
+	
+	/**
+	 * Called when extraction starts
+	 */
 	public void startExtraction();
 }

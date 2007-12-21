@@ -39,10 +39,17 @@ public class LabelledColor extends JPanel
 	//---------------------------------------------------------- CONSTANTS --//
 	
 	//---------------------------------------------------------- VARIABLES --//	
-	private JPanel colorPanel;
-	private JLabel text;
+	private JPanel colorPanel;		// Color panel
+	private JLabel text;			// Color legend
 	
 	//------------------------------------------------------- CONSTRUCTORS --//	
+	
+	/**
+	 * Construct a LabelledColor
+	 * 
+	 * @param color Color
+	 * @param string String
+	 */
 	public LabelledColor(Color color, String string) 
 	{
 		// Create objects
